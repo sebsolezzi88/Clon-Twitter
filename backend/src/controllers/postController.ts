@@ -14,9 +14,9 @@ export const createPost = async (req: Request, res: Response): Promise<Response>
         if (!text || text === '') {
             return res.status(400).json({ status: 'error', msg: 'Text is requerid' })
         }
-        //Crear el post
-        const newPost = Post.create({
-            author: req.body.userId,
+        
+        const newPost = await Post.create({
+            author: req.userId,
             text,
             image
         })
