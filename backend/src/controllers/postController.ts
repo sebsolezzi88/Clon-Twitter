@@ -10,8 +10,8 @@ dotenv.config();
 //Funcion para crear post
 export const createPost = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const { text, image } = req.body;
-        if (!text) {
+        const { text, image } = req.body || {};
+        if (!text || text === '') {
             return res.status(400).json({ status: 'error', msg: 'Text is requerid' })
         }
         //Crear el post
