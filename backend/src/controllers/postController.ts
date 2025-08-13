@@ -156,3 +156,47 @@ export const commentPost = async (req: Request, res: Response): Promise<Response
         return res.status(500).json({ status: 'error', msg: 'Server Error' })
     }
 }
+
+//Funcion para agregar o quitar likes de un post
+export const likePost = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const { postId } = req.params;
+
+        if (!postId || !isValidObjectId(postId)) {
+            return res.status(400).json({ status: 'error', msg: 'Post ID is required' });
+        }
+
+        const currentUserId = req.userId;
+
+        if (!currentUserId) {
+            return res.status(401).json({ status: 'error', msg: 'User is not authenticated' });
+        }
+
+        const post = await Post.findById(postId);
+
+        if (!post) {
+            return res.status(404).json({ status: 'error', msg: 'Post not found' });
+        }
+        
+        const currentUserIdValid = currentUserId as mongoose.Types.ObjectId;
+
+        // Comprueba si el usuario ya le dio like al post
+        const hasLiked = post.likes?.some(id => id.toString() === currentUserIdValid.toString());
+
+        if (hasLiked) {
+            // Si el usuario ya le dio like, lo elimina
+            post.likes = post.likes?.filter(id => id.toString() !== currentUserIdValid.toString());
+            await post.save();
+            return res.status(200).json({ status: 'success', msg: 'Like removed successfully' });
+        } else {
+            // Si el usuario no le dio like, lo añade
+            post.likes?.push(currentUserIdValid);
+            await post.save();
+            return res.status(200).json({ status: 'success', msg: 'Post liked successfully' });
+        }
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ status: 'error', msg: 'Server Error' });
+    }
+};
