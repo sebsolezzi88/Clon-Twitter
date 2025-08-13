@@ -5,6 +5,7 @@ import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import User from "../models/User";
 import dotenv from 'dotenv';
 import mongoose, { isValidObjectId,ObjectId } from "mongoose";
+import { transporter } from "../config/mail";
 
 
 // Cargar variables de entorno desde .env
@@ -21,7 +22,7 @@ export const createAccount = async (req: Request, res: Response): Promise<Respon
         const { username, password, email } = req.body;
 
         //hasheamos el password
-        const passwordHash = await bcrypt.hash(req.body.password, 10);
+        const passwordHash = await bcrypt.hash(password, 10);
 
         //Si no hay errores registramos al usuario
         const newUser = await User.create({
@@ -40,7 +41,18 @@ export const createAccount = async (req: Request, res: Response): Promise<Respon
 
         await newUser.save(); //Guardar el token de activación
 
-        return res.status(200).json({ status: 'success', msg: 'User created' })
+        const activationUrl = `http://localhost:3000/api/user/activate?token=${activationToken}`;
+
+        //Mandar mail
+        await transporter.sendMail({
+        from: '"Clon Tuiter" <no-reply@clontuiter.com>',
+        to: newUser.email,
+        subject: "Activa tu cuenta",
+        html: `<p>Hola ${newUser.username}, activa tu cuenta dando clic en el siguiente enlace:</p>
+                <a href="${activationUrl}">Activar cuenta</a>`
+        });
+
+        return res.status(200).json({status:'success', message: "User created. We send a confirmation email "});
     } catch (error) {
         console.log(error);
         return res.status(500).json({ status: 'error', msg: 'Server Error' })
