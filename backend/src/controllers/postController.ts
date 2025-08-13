@@ -120,7 +120,7 @@ export const getPostByUserId = async (req: Request, res: Response): Promise<Resp
 export const commentPost = async (req: Request, res: Response): Promise<Response> => {
     try {
 
-        const {text} = req.body || {};
+        const { text } = req.body || {};
 
         const { postId } = req.params;
 
@@ -139,18 +139,18 @@ export const commentPost = async (req: Request, res: Response): Promise<Response
             return res.status(404).json({ status: 'error', msg: 'Post not Found' })
         }
 
-        if(req.userId && isValidObjectId(req.userId)){
+        if (req.userId && isValidObjectId(req.userId)) {
             const comment = {
-            user: new mongoose.Types.ObjectId(req.userId.toString()),
-            text:text,
-            createdAt: new Date()
-        }
+                user: new mongoose.Types.ObjectId(req.userId.toString()),
+                text: text,
+                createdAt: new Date()
+            }
             postExist.comments!.push(comment);
         }
-        
+
         await postExist.save();
 
-        return res.status(201).json({ status: 'success', msg: 'Post Commented' , post:postExist})
+        return res.status(201).json({ status: 'success', msg: 'Post Commented', post: postExist })
     } catch (error) {
         console.log(error);
         return res.status(500).json({ status: 'error', msg: 'Server Error' })
@@ -177,8 +177,12 @@ export const likePost = async (req: Request, res: Response): Promise<Response> =
         if (!post) {
             return res.status(404).json({ status: 'error', msg: 'Post not found' });
         }
-        
-        const currentUserIdValid = currentUserId as mongoose.Types.ObjectId;
+        /*
+            convertir el valor a unknown primero y luego al tipo deseado. 
+            Esto le indica al compilador que eres consciente de que la 
+            conversión puede ser riesgosa, pero que la estás haciendo de forma intencionada. 
+         */
+        const currentUserIdValid = currentUserId as unknown as mongoose.Types.ObjectId;
 
         // Comprueba si el usuario ya le dio like al post
         const hasLiked = post.likes?.some(id => id.toString() === currentUserIdValid.toString());
