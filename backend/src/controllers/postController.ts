@@ -3,7 +3,8 @@ import { Request, Response } from "express"
 import { validationResult } from "express-validator";
 import dotenv from 'dotenv';
 import Post from "../models/Post";
-import { isValidObjectId } from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
+
 
 // Cargar variables de entorno desde .env
 dotenv.config();
@@ -109,6 +110,52 @@ export const getPostByUserId = async (req: Request, res: Response): Promise<Resp
 
 
         return res.status(201).json({ status: 'success', msg: 'Post deleted', posts: postsExist })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ status: 'error', msg: 'Server Error' })
+    }
+}
+
+//Funcion para comentar Post
+export const commentPost = async (req: Request, res: Response): Promise<Response> => {
+    try {
+
+        const {text} = req.body || {};
+
+        const { postId } = req.params;
+
+        if (!text || text === '') {
+            return res.status(400).json({ status: 'error', msg: 'Text is requerid' })
+        }
+
+        if (!postId || !isValidObjectId(postId)) {
+            return res.status(400).json({ status: 'error', msg: 'Id requeried' });
+        }
+
+        //Verificar si el post existe
+        const postExist = await Post.findById(postId);
+
+        if (!postExist) {
+            return res.status(404).json({ status: 'error', msg: 'Post not Found' })
+        }
+
+        //Verificar si el post pertence al usuario logueado
+        if (req.userId && postExist.author.toString() !== req.userId.toString()) {
+            return res.status(403).json({ status: 'error', msg: 'Forbidden' })
+        }
+
+        if(req.userId && isValidObjectId(req.userId)){
+            const comment = {
+            user: new mongoose.Types.ObjectId(req.userId.toString()),
+            text:text,
+            createdAt: new Date()
+        }
+            postExist.comments!.push(comment);
+        }
+        
+        await postExist.save();
+
+        return res.status(201).json({ status: 'success', msg: 'Post Commented' , post:postExist})
     } catch (error) {
         console.log(error);
         return res.status(500).json({ status: 'error', msg: 'Server Error' })
