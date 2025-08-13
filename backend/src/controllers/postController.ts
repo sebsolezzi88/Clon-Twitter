@@ -139,11 +139,6 @@ export const commentPost = async (req: Request, res: Response): Promise<Response
             return res.status(404).json({ status: 'error', msg: 'Post not Found' })
         }
 
-        //Verificar si el post pertence al usuario logueado
-        if (req.userId && postExist.author.toString() !== req.userId.toString()) {
-            return res.status(403).json({ status: 'error', msg: 'Forbidden' })
-        }
-
         if(req.userId && isValidObjectId(req.userId)){
             const comment = {
             user: new mongoose.Types.ObjectId(req.userId.toString()),
