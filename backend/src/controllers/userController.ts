@@ -4,7 +4,7 @@ import { validationResult } from "express-validator";
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import User from "../models/User";
 import dotenv from 'dotenv';
-import mongoose, { isValidObjectId,ObjectId } from "mongoose";
+import mongoose, { isValidObjectId, ObjectId } from "mongoose";
 import { transporter } from "../config/mail";
 
 
@@ -45,19 +45,67 @@ export const createAccount = async (req: Request, res: Response): Promise<Respon
 
         //Mandar mail
         await transporter.sendMail({
-        from: '"Clon Tuiter" <no-reply@clontuiter.com>',
-        to: newUser.email,
-        subject: "Activa tu cuenta",
-        html: `<p>Hola ${newUser.username}, activa tu cuenta dando clic en el siguiente enlace:</p>
+            from: '"Clon Tuiter" <no-reply@clontuiter.com>',
+            to: newUser.email,
+            subject: "Activa tu cuenta",
+            html: `<p>Hola ${newUser.username}, activa tu cuenta dando clic en el siguiente enlace:</p>
                 <a href="${activationUrl}">Activar cuenta</a>`
         });
 
-        return res.status(200).json({status:'success', message: "User created. We send a confirmation email "});
+        return res.status(200).json({ status: 'success', message: "User created. We send a confirmation email " });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ status: 'error', msg: 'Server Error' })
     }
 }
+
+//Funcion para activar cuenta de usuario
+export const activateAccount = async (req: Request, res: Response): Promise<Response> => {
+    const { token } = req.query;
+
+    if (!token || typeof token !== "string") {
+        return res.status(400).json({ status: "error", message: "Token is missing or invalid." });
+    }
+
+    try {
+        // Verificar el token
+        const decoded: any = jwt.verify(token, process.env.SECRET_KEY!);
+
+        // Buscar usuario por ID
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            return res.status(404).json({ status: "error", message: "User not found." });
+        }
+
+        // Verificar que el token coincida
+        if (user.activationToken !== token) {
+            return res.status(403).json({ status: "error", message: "Invalid activation token." });
+        }
+
+        // Activar usuario
+        user.isActive = true;
+        user.activationToken = undefined;
+        await user.save();
+
+        return res.status(200).json({ status: "success", message: "Account activated successfully." });
+
+    } catch (error) {
+        // Manejo específico del error de token expirado
+        if (error instanceof jwt.TokenExpiredError) {
+            console.error("Activation token has expired.");
+            return res.status(401).json({ status: "error", message: "Activation token has expired. Please request a new one." });
+        }
+        //Manejo de token invalido
+        if (error instanceof jwt.JsonWebTokenError) {
+            console.log(error);
+            return res.status(401).json({ status: 'error', message: 'invalid token' });
+        }
+
+        // Manejo de otros errores
+        console.error("An error occurred:", error);
+        return res.status(401).json({ status: "error", message: "Token is invalid." });
+    }
+};
 
 //Funcion para logear usuario y generar token
 export const loginUser = async (req: Request, res: Response): Promise<Response> => {
@@ -130,13 +178,13 @@ export const followUser = async (req: Request, res: Response): Promise<Response>
         if (!userToFollow || !currentUser) {
             return res.status(404).json({ status: 'error', msg: 'Usuario no encontrado' });
         }
-        
+
         // --- Solución del error ---
         // Se corrige la asignación de tipos de forma explícita.
         // `_id` es de tipo `mongoose.Types.ObjectId`
         const userToFollowId = userToFollow._id as mongoose.Types.ObjectId;
         const currentUserIdValid = currentUser._id as mongoose.Types.ObjectId;
-        
+
         //Verificar si ya seguimos al usuario
         const isFollowing = currentUser.following?.some(id => id.toString() === userToFollowId.toString());
         if (isFollowing) {
