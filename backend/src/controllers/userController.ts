@@ -144,3 +144,56 @@ export const followUser = async (req: Request, res: Response): Promise<Response>
         return res.status(500).json({ status: 'error', msg: 'Error del servidor' });
     }
 };
+
+
+//Funcion para dejar de seguir a usuario
+export const unfollowUser = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const { idUser } = req.params;
+
+        if (!idUser || !isValidObjectId(idUser)) {
+            return res.status(400).json({ status: 'error', msg: 'Id requerido' });
+        }
+
+        const currentUserId = req.userId;
+
+        if (currentUserId && currentUserId.toString() === idUser.toString()) {
+            return res.status(400).json({ status: 'error', msg: "No puedes dejar de seguirte a ti mismo" });
+        }
+
+        const userToUnfollow = await User.findById(idUser);
+        const currentUser = await User.findById(currentUserId);
+
+        if (!userToUnfollow || !currentUser) {
+            return res.status(404).json({ status: 'error', msg: 'Usuario no encontrado' });
+        }
+
+        const userToUnfollowId = userToUnfollow._id as mongoose.Types.ObjectId;
+        const currentUserIdValid = currentUser._id as mongoose.Types.ObjectId;
+
+        // Verificar si el usuario actual sigue al usuario que quiere dejar de seguir
+        const isFollowing = currentUser.following?.some(id => id.toString() === userToUnfollowId.toString());
+        if (!isFollowing) {
+            return res.status(400).json({ status: 'error', msg: 'No sigues a este usuario' });
+        }
+
+        // Eliminar al usuario de la lista 'following'
+        currentUser.following = currentUser.following?.filter(
+            (id) => id.toString() !== userToUnfollowId.toString()
+        );
+
+        // Eliminar al usuario actual de la lista 'followers' del otro usuario
+        userToUnfollow.followers = userToUnfollow.followers?.filter(
+            (id) => id.toString() !== currentUserIdValid.toString()
+        );
+
+        await currentUser.save();
+        await userToUnfollow.save();
+
+        return res.status(200).json({ status: 'success', msg: 'Dejaste de seguir al usuario con éxito' });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ status: 'error', msg: 'Error del servidor' });
+    }
+};
