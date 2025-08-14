@@ -26,6 +26,7 @@ export const Login = () => {
     }
 
     try {
+      setLoading(true);
       const response = await login(formData);
 
       // Verifica si la respuesta contiene un mensaje de error del backend
@@ -53,6 +54,8 @@ export const Login = () => {
         autoClose: 4000,
       });
       console.error(error);
+    }finally{
+      setLoading(false);
     }
   };
 
