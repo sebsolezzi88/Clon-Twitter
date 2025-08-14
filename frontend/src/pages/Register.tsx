@@ -3,13 +3,12 @@ import { Link } from "react-router-dom";
 import type { RegisterFormData } from "../types/types";
 
 export const Register = () => {
-
   //Estado del formulario
   const [formData, setFormData] = useState<RegisterFormData>({
-    username:'',
-    email:'',
-    password:'',
-    passwordr:'',
+    username: "",
+    email: "",
+    password: "",
+    passwordr: "",
   });
   return (
     <div className="flex items-center justify-center p-4">
@@ -31,6 +30,9 @@ export const Register = () => {
               Nombre de Usuario
             </label>
             <input
+              onChange={(e) =>
+                setFormData({ ...formData, [e.target.name]: e.target.value })
+              }
               type="text"
               id="username"
               name="username"
@@ -48,6 +50,9 @@ export const Register = () => {
               Email
             </label>
             <input
+              onChange={(e) =>
+                setFormData({ ...formData, [e.target.name]: e.target.value })
+              }
               type="email"
               id="email"
               name="email"
@@ -65,6 +70,9 @@ export const Register = () => {
               Password
             </label>
             <input
+              onChange={(e) =>
+                setFormData({ ...formData, [e.target.name]: e.target.value })
+              }
               type="password"
               id="password"
               name="password"
@@ -82,6 +90,9 @@ export const Register = () => {
               Repetir Password
             </label>
             <input
+              onChange={(e) =>
+                setFormData({ ...formData, [e.target.name]: e.target.value })
+              }
               type="password"
               id="passwordr"
               name="passwordr"
