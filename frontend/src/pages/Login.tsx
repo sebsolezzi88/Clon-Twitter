@@ -1,10 +1,16 @@
 import { useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { LoginFormData } from "../types/types";
 import { toast } from "react-toastify";
-import { login } from "../api/user";
+
+import { useAuthStore } from "../storage/authStorage";
+import { loginUser } from "../api/user";
 
 export const Login = () => {
+
+  const navigate = useNavigate();//Para redireccionar
+  const { login } = useAuthStore(); //Funcion del storage
+
   //Estado del form
   const [formData, setFormData] = useState<LoginFormData>({
     username: "",
@@ -27,7 +33,7 @@ export const Login = () => {
 
     try {
       setLoading(true);
-      const response = await login(formData);
+      const response = await loginUser(formData);
 
       // Verifica si la respuesta contiene un mensaje de error del backend
       if (response && response.status === "error") {
@@ -40,7 +46,10 @@ export const Login = () => {
           theme: "colored",
           autoClose: 4000,
         });
-        console.log(response.userData);
+        
+        login(response.userData!);//Guardando en el storage
+        navigate('/'); //Redireccionar
+        
       } else {
         // Maneja casos donde la respuesta no es la esperada
         toast.error("Error inesperado en la respuesta del servidor", {
@@ -55,7 +64,7 @@ export const Login = () => {
         autoClose: 4000,
       });
       console.error(error);
-    }finally{
+    } finally {
       setLoading(false);
     }
   };

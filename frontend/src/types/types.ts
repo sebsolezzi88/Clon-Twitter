@@ -36,7 +36,7 @@ export type LoginFormData = Pick<User, 'username' | 'password'>
 
 export interface UserLoginData {
     username: string;
-    bio: string;
+    bio?: string;
     token: string;
 }
 

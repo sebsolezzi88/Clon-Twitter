@@ -1,6 +1,7 @@
 import axios from "axios";
 import type { ApiResponse, LoginApiPostResponse, LoginFormData, RegisterFormData } from "../types/types";
 
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 //Funcion para registrar usuarios
@@ -20,7 +21,7 @@ export const registerUser = async (data:RegisterFormData) =>{
 }
 
 //Funcion para loguearse 
-export const login = async (data: LoginFormData):Promise<LoginApiPostResponse> => {
+export const loginUser = async (data: LoginFormData):Promise<LoginApiPostResponse> => {
     try {
         const res = await axios.post<LoginApiPostResponse>(`${API_URL}/user/login`, data);
         return res.data;
