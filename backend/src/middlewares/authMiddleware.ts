@@ -24,7 +24,7 @@ export const verifyToken = async (req:Request,res:Response,next:NextFunction) =>
     const token = authHeader && authHeader.split(' ')[1];
 
     if(!token){
-         return res.status(401).json({ status:'error' ,message: 'token not provided' });
+         return res.status(401).json({ status:'error' ,msg: 'token not provided' });
     }
 
     try {
@@ -33,7 +33,7 @@ export const verifyToken = async (req:Request,res:Response,next:NextFunction) =>
         //verificar si el usuario esta en la base de datos
         const userExists = await User.findById(decoded.id);
         if(!userExists){
-            return res.status(403).json({ status: 'error', message: 'invalid user' });
+            return res.status(403).json({ status: 'error', msg: 'invalid user' });
         }
         
         req.userId = userExists._id as ObjectId;
@@ -42,12 +42,12 @@ export const verifyToken = async (req:Request,res:Response,next:NextFunction) =>
         
     } catch (error:unknown) {
         if (error instanceof jwt.TokenExpiredError) {
-            return res.status(401).json({ status: 'error', message: 'token expired' });
+            return res.status(401).json({ status: 'error', msg: 'token expired' });
         }
         if (error instanceof jwt.JsonWebTokenError) {
             console.log(error);
-            return res.status(401).json({ status: 'error', message: 'invalid token' });
+            return res.status(401).json({ status: 'error', msg: 'invalid token' });
         }
-        return res.status(500).json({status:'error', message:'internal server error',error});
+        return res.status(500).json({status:'error', msg:'internal server error',error});
     }
 }

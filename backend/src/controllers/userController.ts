@@ -52,7 +52,7 @@ export const createAccount = async (req: Request, res: Response): Promise<Respon
                 <a href="${activationUrl}">Activar cuenta</a>`
         });
 
-        return res.status(200).json({ status: 'success', message: "User created. We send a confirmation email " });
+        return res.status(200).json({ status: 'success', msg: "User created. We send a confirmation email " });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ status: 'error', msg: 'Server Error' })
@@ -64,7 +64,7 @@ export const activateAccount = async (req: Request, res: Response): Promise<Resp
     const { token } = req.query;
 
     if (!token || typeof token !== "string") {
-        return res.status(400).json({ status: "error", message: "Token is missing or invalid." });
+        return res.status(400).json({ status: "error", msg: "Token is missing or invalid." });
     }
 
     try {
@@ -74,12 +74,12 @@ export const activateAccount = async (req: Request, res: Response): Promise<Resp
         // Buscar usuario por ID
         const user = await User.findById(decoded.id);
         if (!user) {
-            return res.status(404).json({ status: "error", message: "User not found." });
+            return res.status(404).json({ status: "error", msg: "User not found." });
         }
 
         // Verificar que el token coincida
         if (user.activationToken !== token) {
-            return res.status(403).json({ status: "error", message: "Invalid activation token." });
+            return res.status(403).json({ status: "error", msg: "Invalid activation token." });
         }
 
         // Activar usuario
@@ -87,23 +87,23 @@ export const activateAccount = async (req: Request, res: Response): Promise<Resp
         user.activationToken = undefined;
         await user.save();
 
-        return res.status(200).json({ status: "success", message: "Account activated successfully." });
+        return res.status(200).json({ status: "success", msg: "Account activated successfully." });
 
     } catch (error) {
         // Manejo específico del error de token expirado
         if (error instanceof jwt.TokenExpiredError) {
             console.error("Activation token has expired.");
-            return res.status(401).json({ status: "error", message: "Activation token has expired. Please request a new one." });
+            return res.status(401).json({ status: "error", msg: "Activation token has expired. Please request a new one." });
         }
         //Manejo de token invalido
         if (error instanceof jwt.JsonWebTokenError) {
             console.log(error);
-            return res.status(401).json({ status: 'error', message: 'invalid token' });
+            return res.status(401).json({ status: 'error', msg: 'invalid token' });
         }
 
         // Manejo de otros errores
         console.error("An error occurred:", error);
-        return res.status(401).json({ status: "error", message: "Token is invalid." });
+        return res.status(401).json({ status: "error", msg: "Token is invalid." });
     }
 };
 
