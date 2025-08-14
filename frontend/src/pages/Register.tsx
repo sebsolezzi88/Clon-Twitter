@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import type { RegisterFormData } from "../types/types";
+import { toast } from "react-toastify";
 
 export const Register = () => {
   //Estado del formulario
@@ -10,6 +11,32 @@ export const Register = () => {
     password: "",
     passwordr: "",
   });
+
+  //Submit Form
+  const handletSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    
+    //Verificar campos vacios
+    if (Object.values(formData).includes("")) {
+      return toast.error("Debe Completar todos los campos", {
+        theme: "colored",
+        autoClose: 2000,
+      });
+    }
+    //Comprobar si coinciden los passwords
+    if(formData.password !== formData.passwordr){
+      return toast.error("Los password no coinciden", {
+        theme: "colored",
+        autoClose: 2000,
+      });
+    }
+    //Registrar usuario
+    try {
+      
+    } catch (error) {
+      
+    }
+  };
   return (
     <div className="flex items-center justify-center p-4">
       <div className="max-w-lg w-full bg-white rounded-xl shadow-lg p-8 space-y-6">
@@ -21,7 +48,7 @@ export const Register = () => {
             Regístrate para opinar y comentar libremente.
           </p>
         </div>
-        <form className="space-y-4">
+        <form onSubmit={handletSubmit} className="space-y-4">
           <div>
             <label
               htmlFor="username"
@@ -33,6 +60,7 @@ export const Register = () => {
               onChange={(e) =>
                 setFormData({ ...formData, [e.target.name]: e.target.value })
               }
+              value={formData.username}
               type="text"
               id="username"
               name="username"
@@ -53,6 +81,7 @@ export const Register = () => {
               onChange={(e) =>
                 setFormData({ ...formData, [e.target.name]: e.target.value })
               }
+              value={formData.email}
               type="email"
               id="email"
               name="email"
@@ -73,6 +102,7 @@ export const Register = () => {
               onChange={(e) =>
                 setFormData({ ...formData, [e.target.name]: e.target.value })
               }
+              value={formData.password}
               type="password"
               id="password"
               name="password"
@@ -93,6 +123,7 @@ export const Register = () => {
               onChange={(e) =>
                 setFormData({ ...formData, [e.target.name]: e.target.value })
               }
+              value={formData.passwordr}
               type="password"
               id="passwordr"
               name="passwordr"
