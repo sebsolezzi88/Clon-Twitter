@@ -40,6 +40,7 @@ export const Login = () => {
           theme: "colored",
           autoClose: 4000,
         });
+        console.log(response.userData);
       } else {
         // Maneja casos donde la respuesta no es la esperada
         toast.error("Error inesperado en la respuesta del servidor", {

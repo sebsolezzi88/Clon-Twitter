@@ -20,7 +20,7 @@ export const registerUser = async (data:RegisterFormData) =>{
 }
 
 //Funcion para loguearse 
-export const login = async (data: LoginFormData) => {
+export const login = async (data: LoginFormData):Promise<LoginApiPostResponse> => {
     try {
         const res = await axios.post<LoginApiPostResponse>(`${API_URL}/user/login`, data);
         return res.data;
