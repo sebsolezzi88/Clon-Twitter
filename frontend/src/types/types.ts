@@ -29,4 +29,4 @@ type PasswordConfirmation = {
     passwordr: string;
 };
 //Usar el tipo de intersección '&' para combinarlos en un nuevo tipo
-export type UserFormData = UserFormDataBase & PasswordConfirmation;
+export type RegisterFormData = UserFormDataBase & PasswordConfirmation;
