@@ -1,6 +1,16 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import type { RegisterFormData } from "../types/types";
 
 export const Register = () => {
+
+  //Estado del formulario
+  const [formData, setFormData] = useState<RegisterFormData>({
+    username:'',
+    email:'',
+    password:'',
+    passwordr:'',
+  });
   return (
     <div className="flex items-center justify-center p-4">
       <div className="max-w-lg w-full bg-white rounded-xl shadow-lg p-8 space-y-6">
