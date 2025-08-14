@@ -30,3 +30,6 @@ type PasswordConfirmation = {
 };
 //Usar el tipo de intersección '&' para combinarlos en un nuevo tipo
 export type RegisterFormData = UserFormDataBase & PasswordConfirmation;
+
+//Type loginform
+export type LoginFormData = Pick<User, 'username' | 'password'>
