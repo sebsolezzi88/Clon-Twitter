@@ -2,6 +2,7 @@ import Navbar from './components/Navbar';
 import { Routes, Route } from 'react-router-dom';
 import { Register } from './pages/Register';
 import { Login } from './pages/Login';
+import Page404 from './pages/Page404';
 function App() {
 
 
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path='/registro' element={<Register/>}/>
         <Route path='/login' element={<Login/>}/>
+        <Route path='*' element={<Page404/>}/>
       </Routes>
     </>
   )
