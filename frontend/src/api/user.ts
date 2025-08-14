@@ -20,16 +20,16 @@ export const registerUser = async (data:RegisterFormData) =>{
 }
 
 //Funcion para loguearse 
-export const login = async (data:LoginFormData) =>{
+export const login = async (data: LoginFormData) => {
     try {
-        const res = await axios.post<LoginApiPostResponse>(`${API_URL}/user/login`,data);
+        const res = await axios.post<LoginApiPostResponse>(`${API_URL}/user/login`, data);
         return res.data;
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            console.error("Error al loguear usuarip:", error.response?.data || error.message);
-            throw new Error(error.response?.data?.message || "Error deconocido al loguearse");
+            // Devuelve el objeto de error completo para que sea manejado por quien llama a la función
+            return error.response?.data;
         } else {
-            console.error("Error inesperado:", error);
+            // Lanza un error genérico para errores inesperados
             throw new Error("Ocurrió un error inesperado.");
         }
     }
