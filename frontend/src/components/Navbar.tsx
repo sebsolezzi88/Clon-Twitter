@@ -58,7 +58,7 @@ const Header = () => {
           <ul className="flex flex-col space-y-2">
             <li>
               <Link
-                to="/registro"
+                to="/"
                 onClick={toggleMenu}
                 className="block bg-sky-600 p-2 rounded-md hover:bg-sky-700 transition-colors"
               >
@@ -67,7 +67,7 @@ const Header = () => {
             </li>
             <li>
               <Link
-                to="/login"
+                to="/registro"
                 onClick={toggleMenu}
                 className="block bg-sky-600 p-2 rounded-md hover:bg-sky-700 transition-colors"
               >
@@ -76,7 +76,7 @@ const Header = () => {
             </li>
             <li>
               <Link
-                to="/"
+                to="/login"
                 onClick={toggleMenu}
                 className="block bg-sky-600 p-2 rounded-md hover:bg-sky-700 transition-colors"
               >
