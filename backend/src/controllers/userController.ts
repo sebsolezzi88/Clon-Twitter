@@ -144,13 +144,13 @@ export const loginUser = async (req: Request, res: Response): Promise<Response> 
             username: userExist.username
         }
 
-        //Generar Token Para activar su cuenta
+        //Generar Token Para 
         const token = jwt.sign(payload,
             process.env.SECRET_KEY!,
             { expiresIn: '3d' }
         );
         const userData = {
-            userId: userExist._id,
+            bio:userExist.bio,
             username: userExist.username,
             token
         }
