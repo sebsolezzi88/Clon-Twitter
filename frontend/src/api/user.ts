@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 //Funcion para registrar usuarios
 export const registerUser = async (data:RegisterFormData) =>{
     try {
-        const res = await axios.post<ApiResponse>(`${API_URL}/user`,data);
+        const res = await axios.post<ApiResponse>(`${API_URL}/user/create`,data);
         return res.data;
     } catch (error) {
         if (axios.isAxiosError(error)) {

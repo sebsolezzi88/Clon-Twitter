@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { getMongoConnection } from './config/db';
 import userRoutes from './routes/userRoutes';
 import postRoutes from './routes/postRoutes';
@@ -10,6 +11,7 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.json()); //Para leer los json
+app.use(cors()); //Uso de cors
 
 //Conexion a la base de datos
 getMongoConnection();
