@@ -1,26 +1,26 @@
-type Status= 'success' | 'error';
-type Rol= 'user' | 'admin';
+type Status = 'success' | 'error';
+type Rol = 'user' | 'admin';
 
 
-export interface ApiResponse{
+export interface ApiResponse {
     status: Status;
-    msg:string;
+    msg: string;
 }
 
 //Interface para usuario
-export interface User{
+export interface User {
     username: string;
     bio?: string;
     email: string;
     password: string;
     role: Rol;
-    isActive: boolean;             
-    activationToken?: string;      
+    isActive: boolean;
+    activationToken?: string;
     createdAt: Date;
 
     // Relaciones
-    followers?: string[]; 
-    following?: string[]; 
+    followers?: string[];
+    following?: string[];
 }
 //Tipo base para el formulario, seleccionando campos existentes
 type UserFormDataBase = Pick<User, 'username' | 'password' | 'email'>;
@@ -34,7 +34,12 @@ export type RegisterFormData = UserFormDataBase & PasswordConfirmation;
 //Type loginform
 export type LoginFormData = Pick<User, 'username' | 'password'>
 
-//
-export interface LoginApiPostResponse extends ApiResponse{
-    token?:string;
+export interface UserLoginData {
+    username: string;
+    bio: string;
+    token: string;
+}
+
+export interface LoginApiPostResponse extends ApiResponse {
+    userData:UserLoginData;
 }

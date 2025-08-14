@@ -149,8 +149,13 @@ export const loginUser = async (req: Request, res: Response): Promise<Response> 
             process.env.SECRET_KEY!,
             { expiresIn: '3d' }
         );
+        const userData = {
+            userId: userExist._id,
+            username: userExist.username,
+            token
+        }
 
-        return res.status(200).json({ status: 'success', msg: 'User Loged', token })
+        return res.status(200).json({ status: 'success', msg: 'User Loged', userData })
     } catch (error) {
         console.log(error);
         return res.status(500).json({ status: 'error', msg: 'Server Error' })
