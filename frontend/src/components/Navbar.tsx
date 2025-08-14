@@ -11,18 +11,29 @@ const Header = () => {
     <header className="bg-sky-500 p-4 mb-6 text-white shadow-md">
       <div className="flex justify-between items-center">
         {/* Logo / título */}
-        <h1 className="text-2xl font-bold">Clon Tuiter</h1>
+        <Link to="/">
+          <h1 className="text-2xl font-bold">Clon Tuiter</h1>
+        </Link>
 
         {/* Menú en escritorio */}
         {/* El menú de escritorio está oculto por defecto (hidden) y se muestra como flex en pantallas 'md' o más grandes */}
         <nav className="hidden md:flex space-x-4 items-center">
-          <Link to="/" className="hover:text-sky-200 font-bold transition-colors">
+          <Link
+            to="/"
+            className="hover:text-sky-200 font-bold transition-colors"
+          >
             Inicio
           </Link>
-          <Link to="/registro" className="hover:text-sky-200 font-bold transition-colors">
+          <Link
+            to="/registro"
+            className="hover:text-sky-200 font-bold transition-colors"
+          >
             Registro
           </Link>
-          <Link to="/login" className="hover:text-sky-200 font-bold transition-colors">
+          <Link
+            to="/login"
+            className="hover:text-sky-200 font-bold transition-colors"
+          >
             Login
           </Link>
         </nav>
