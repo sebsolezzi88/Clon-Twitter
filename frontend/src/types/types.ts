@@ -41,5 +41,5 @@ export interface UserLoginData {
 }
 
 export interface LoginApiPostResponse extends ApiResponse {
-    userData:UserLoginData;
+    userData?:UserLoginData;
 }
