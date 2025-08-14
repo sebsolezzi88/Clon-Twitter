@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useAuthStore } from "../storage/authStorage";
 import { loginUser } from "../api/user";
 
-export const Login = () => {
+export const PageLogin = () => {
 
   const navigate = useNavigate();//Para redireccionar
   const { login } = useAuthStore(); //Funcion del storage

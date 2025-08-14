@@ -1,12 +1,15 @@
 import Navbar from './components/Navbar';
 import { Routes, Route } from 'react-router-dom';
-import { Register } from './pages/Register';
-import { Login } from './pages/Login';
+
 import Page404 from './pages/Page404';
-import Main from './pages/Main';
+
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './pages/ProtectedRoute';
-import Profile from './pages/Profile';
+import PageMain from './pages/PageMain';
+import { PageRegister } from './pages/PageRegister';
+import { PageLogin } from './pages/PageLogin';
+import PageProfile from './pages/PageProfile';
+
 function App() {
 
 
@@ -15,13 +18,13 @@ function App() {
     <ToastContainer/>
       <Navbar/>
       <Routes>
-        <Route path='/' element={<Main/>}/>
-        <Route path='/registro' element={<Register/>}/>
-        <Route path='/login' element={<Login/>}/>
+        <Route path='/' element={<PageMain/>}/>
+        <Route path='/registro' element={<PageRegister/>}/>
+        <Route path='/login' element={<PageLogin/>}/>
         <Route path='*' element={<Page404/>}/>
 
          <Route element={<ProtectedRoute />}>
-          <Route path="/perfil" element={<Profile />} />
+          <Route path="/perfil" element={<PageProfile />} />
 
         </Route>
       </Routes>

@@ -4,7 +4,7 @@ import type { RegisterFormData } from "../types/types";
 import { toast } from "react-toastify";
 import { registerUser } from "../api/user";
 
-export const Register = () => {
+export const PageRegister = () => {
   //Navegdor
   const navigate = useNavigate();
 
