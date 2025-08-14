@@ -1,6 +1,14 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import type { LoginFormData } from "../types/types";
 
 export const Login = () => {
+  //Estado del form
+  const [formData, setFormData] = useState<LoginFormData>({
+    username: "",
+    password: "",
+  });
+
   return (
     <div className="flex items-center justify-center p-4">
       <div className="max-w-lg w-full bg-white rounded-xl shadow-lg p-8 space-y-6">
@@ -21,6 +29,10 @@ export const Login = () => {
               Nombre de Usuario
             </label>
             <input
+              onChange={(e) =>
+                setFormData({ ...formData, [e.target.name]: e.target.value })
+              }
+              value={formData.username}
               type="text"
               id="username"
               name="username"
@@ -39,6 +51,10 @@ export const Login = () => {
               Password
             </label>
             <input
+              onChange={(e) =>
+                setFormData({ ...formData, [e.target.name]: e.target.value })
+              }
+              value={formData.password}
               type="password"
               id="password"
               placeholder="Tu password"
