@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { UserLoginData } from '../types/types';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 // Define la interfaz para el estado de autenticación
 interface AuthState {
@@ -10,9 +11,24 @@ interface AuthState {
 }
 
 // Crea el store
-export const useAuthStore = create<AuthState>((set) => ({
+/* export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
   login: (userData) => set({ user: userData, isAuthenticated: true }),
   logout: () => set({ user: null, isAuthenticated: false }),
-}));
+})); */
+
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      isAuthenticated: false,
+      login: (userData) => set({ user: userData, isAuthenticated: true }),
+      logout: () => set({ user: null, isAuthenticated: false }),
+    }),
+    {
+      name: 'auth-storage', 
+      storage: createJSONStorage(() => localStorage), 
+    }
+  )
+);
