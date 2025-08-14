@@ -33,3 +33,8 @@ export type RegisterFormData = UserFormDataBase & PasswordConfirmation;
 
 //Type loginform
 export type LoginFormData = Pick<User, 'username' | 'password'>
+
+//
+export interface LoginApiPostResponse extends ApiResponse{
+    token?:string;
+}
