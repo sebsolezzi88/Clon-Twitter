@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import type { LoginFormData } from "../types/types";
+import { toast } from "react-toastify";
 
 export const Login = () => {
   //Estado del form
@@ -10,7 +11,27 @@ export const Login = () => {
   });
 
   //Estado del Loading
-  const [loading, setLoading]=useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  //Submit form
+  const handletSubmit = async () => {
+    //verificar campos
+    if (Object.values(formData).includes("")) {
+      return toast.error("Username y password obligatorios", {
+        theme: "colored",
+        autoClose: 2000,
+      });
+    }
+    try {
+      
+    } catch (error) {
+      toast.error("Login Error", {
+        theme: "colored",
+        autoClose: 2000,
+      });
+      console.error(error);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center p-4">
@@ -69,14 +90,14 @@ export const Login = () => {
           </div>
 
           <button
-          disabled={loading}
+            disabled={loading}
             type="submit"
             className="w-full font-black flex justify-center py-2 px-4 border border-transparent 
                            rounded-md shadow-sm text-sm text-white 
                            bg-sky-500 hover:bg-sky-600 
                            transition duration-300"
           >
-            Login
+            {loading ? "Cargando" : "Login"}
           </button>
         </form>
         <div className="text-center text-sm text-gray-600">
