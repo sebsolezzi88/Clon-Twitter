@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import type { LoginFormData } from "../types/types";
 import { toast } from "react-toastify";
+import { login } from "../api/user";
 
 export const Login = () => {
   //Estado del form
@@ -14,20 +15,42 @@ export const Login = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   //Submit form
-  const handletSubmit = async () => {
-    //verificar campos
+  const handletSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
     if (Object.values(formData).includes("")) {
       return toast.error("Username y password obligatorios", {
         theme: "colored",
-        autoClose: 2000,
+        autoClose: 4000,
       });
     }
+
     try {
-      
+      const response = await login(formData);
+
+      // Verifica si la respuesta contiene un mensaje de error del backend
+      if (response && response.status === "error") {
+        toast.error(response.msg, {
+          theme: "colored",
+          autoClose: 4000,
+        });
+      } else if (response && response.status === "success") {
+        toast.success("Login correcto", {
+          theme: "colored",
+          autoClose: 4000,
+        });
+      } else {
+        // Maneja casos donde la respuesta no es la esperada
+        toast.error("Error inesperado en la respuesta del servidor", {
+          theme: "colored",
+          autoClose: 4000,
+        });
+      }
     } catch (error) {
+      // Este catch solo se ejecutará para errores inesperados, como fallos de red.
       toast.error("Login Error", {
         theme: "colored",
-        autoClose: 2000,
+        autoClose: 4000,
       });
       console.error(error);
     }
@@ -44,7 +67,7 @@ export const Login = () => {
             Logueate para opinar y comentar libremente.
           </p>
         </div>
-        <form className="space-y-4">
+        <form onSubmit={handletSubmit} className="space-y-4">
           <div>
             <label
               htmlFor="username"
