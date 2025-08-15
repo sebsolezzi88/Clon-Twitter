@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Importa useEffect
 import {
   HeartIcon, // Icono me gusta
   ChatBubbleLeftIcon, // Icono Chat
@@ -8,21 +8,49 @@ import {
   PencilSquareIcon, // Icono de edición
 } from "@heroicons/react/24/outline";
 import { useAuthStore } from "../storage/authStorage";
+import type { BioFormData } from "../types/types";
+import { editBio } from "../api/user";
+import { toast } from "react-toastify";
 
 const PageProfile = () => {
-  // Obtener datos del usuarioç
+  // Obtener datos del usuario
   const { user, login } = useAuthStore();
 
   // Estados para controlar la edición de la biografía
   const [isEditingBio, setIsEditingBio] = useState(false);
-  const [editedBio, setEditedBio] = useState(user?.bio || "");
+  // Inicializa editedBio con el valor actual de user?.bio
+  const [editedBio, setEditedBio] = useState<BioFormData>({ bio: user?.bio || '' });
 
-  const handleSaveBio = () => {
+  // Usa useEffect para actualizar editedBio si user.bio cambia (por ejemplo, al cargar la página)
+  useEffect(() => {
+    setEditedBio({ bio: user?.bio || '' });
+  }, [user?.bio]); // Dependencia en user?.bio
+
+  const handleSaveBio = async () => {
     try {
-      if (user) {
-        login({ ...user, bio: editedBio });
+      const response = await editBio(editedBio);
+      if (response.status === 'success') {
+        if (user) {
+          // Asegúrate de que editedBio.bio tenga el valor correcto
+          login({ ...user, bio: editedBio.bio });
+          toast.success("Biografía editada correctamente", {
+            theme: "colored",
+            autoClose: 4000,
+          });
+        }
+      } else if (response.status === 'error') {
+        toast.error(response.msg, {
+          theme: "colored",
+          autoClose: 4000,
+        });
       }
     } catch (error) {
+      // Manejo de errores para fallos de red o errores inesperados
+      toast.error("Error al guardar la biografía. Inténtalo de nuevo.", {
+        theme: "colored",
+        autoClose: 4000,
+      });
+      console.error("Error inesperado al editar la bio:", error);
     } finally {
       setIsEditingBio(false);
     }
@@ -43,15 +71,20 @@ const PageProfile = () => {
               {isEditingBio ? (
                 <div className="mt-2">
                   <textarea
-                    value={editedBio}
-                    onChange={(e) => setEditedBio(e.target.value)}
+                    value={editedBio.bio}
+                    onChange={(e) => setEditedBio({ ...editedBio, bio: e.target.value })} // Cambiado a bio: e.target.value
                     rows={3}
+                    name="bio" // Asegúrate de que el name sea 'bio'
                     placeholder="Escribe tu nueva biografía..."
                     className="block w-full px-4 py-2 border border-sky-300 rounded-md shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
                   ></textarea>
                   <div className="mt-2 flex space-x-2 justify-end">
                     <button
-                      onClick={() => setIsEditingBio(false)}
+                      onClick={() => {
+                        setIsEditingBio(false);
+                        // Restablece editedBio a la bio original del usuario si cancela
+                        setEditedBio({ bio: user?.bio || '' });
+                      }}
                       className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition"
                     >
                       Cancelar
@@ -67,7 +100,7 @@ const PageProfile = () => {
               ) : (
                 <div className="flex justify-between items-center mt-2">
                   <p className="text-gray-500">
-                    {editedBio || "Este usuario aún no cargó su biografía"}
+                    {user?.bio || "Este usuario aún no cargó su biografía"}
                   </p>
                   <button
                     onClick={() => setIsEditingBio(true)}
