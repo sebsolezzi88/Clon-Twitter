@@ -262,3 +262,24 @@ export const unfollowUser = async (req: Request, res: Response): Promise<Respons
         return res.status(500).json({ status: 'error', msg: 'Error del servidor' });
     }
 };
+
+//Funcion para editar biografía
+export const changeBio = async (req:Request, res:Response):Promise<Response> =>{
+        
+    const {bio} = req.body;
+        
+    try {
+        const userExist = await User.findById(req.userId);
+        if(!userExist){
+            return res.status(404).json({ status: 'error', msg: 'Usuario no encontrado' });
+        }
+        //Si existe cambiamos su bio
+        userExist.bio = bio;
+        await userExist.save();
+        
+        return res.status(200).json({ status: 'success', msg: 'Bio actualizada' });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ status: 'error', msg: 'Error del servidor' });
+    }
+}
