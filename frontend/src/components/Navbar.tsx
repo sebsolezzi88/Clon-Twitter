@@ -1,11 +1,15 @@
 import { Link } from "react-router-dom";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import { useAuthStore } from "../storage/authStorage";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  //Verificar si esta logueado para mostrar links de manera condicional
+  const { isAuthenticated } = useAuthStore();
 
   return (
     <header className="bg-sky-500 p-4 mb-6 text-white shadow-md">
@@ -24,18 +28,37 @@ const Header = () => {
           >
             Inicio
           </Link>
-          <Link
-            to="/registro"
-            className="hover:text-sky-200 font-bold transition-colors"
-          >
-            Registro
-          </Link>
-          <Link
-            to="/login"
-            className="hover:text-sky-200 font-bold transition-colors"
-          >
-            Login
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link
+                to="/registro"
+                className="hover:text-sky-200 font-bold transition-colors"
+              >
+                Perfil
+              </Link>
+              <Link
+                to="/registro"
+                className="hover:text-sky-200 font-bold transition-colors"
+              >
+                Logout
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/registro"
+                className="hover:text-sky-200 font-bold transition-colors"
+              >
+                Registro
+              </Link>
+              <Link
+                to="/login"
+                className="hover:text-sky-200 font-bold transition-colors"
+              >
+                Login
+              </Link>
+            </>
+          )}
         </nav>
 
         {/* Botón hamburguesa en móviles */}
