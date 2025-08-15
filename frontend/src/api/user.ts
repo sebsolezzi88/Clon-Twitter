@@ -1,6 +1,7 @@
 import axios from "axios";
 import type {
   ApiResponse,
+  BioFormData,
   LoginApiPostResponse,
   LoginFormData,
   RegisterFormData,
@@ -52,9 +53,7 @@ export const loginUser = async (
 };
 
 //Funcion para editar la bio
-export const editBio = async (
-  data: LoginFormData
-): Promise<ApiResponse> => {
+export const editBio = async (data: BioFormData): Promise<ApiResponse> => {
   try {
     const { user } = useAuthStore();
     const authToken = user?.token;
@@ -69,8 +68,8 @@ export const editBio = async (
       );
       throw new Error("No autenticado.");
     }
-    const res = await axios.post<ApiResponse>(
-      `${API_URL}/user/login`,
+    const res = await axios.patch<ApiResponse>(
+      `${API_URL}/user/bio`,
       data,
       { headers }
     );
