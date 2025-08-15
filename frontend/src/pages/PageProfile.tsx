@@ -1,16 +1,33 @@
+import React, { useState } from "react";
 import {
-  HeartIcon, //Icono me gusta
-  ChatBubbleLeftIcon, //Icono Chat
+  HeartIcon, // Icono me gusta
+  ChatBubbleLeftIcon, // Icono Chat
   DocumentTextIcon, // Icono para Posts
   UsersIcon, // Icono para Seguidores
   UserPlusIcon, // Icono para Siguiendo
+  PencilSquareIcon, // Icono de edición
 } from "@heroicons/react/24/outline";
 import { useAuthStore } from "../storage/authStorage";
 
 const PageProfile = () => {
+  // Obtener datos del usuarioç
+  const { user, login } = useAuthStore();
 
-  //Obtener datos del usuarioç
-  const {user} = useAuthStore();
+  // Estados para controlar la edición de la biografía
+  const [isEditingBio, setIsEditingBio] = useState(false);
+  const [editedBio, setEditedBio] = useState(user?.bio || "");
+
+  const handleSaveBio = () => {
+    try {
+      if (user) {
+        login({ ...user, bio: editedBio });
+      }
+    } catch (error) {
+    } finally {
+      setIsEditingBio(false);
+    }
+  };
+
   return (
     <div className="flex items-start justify-center p-4 min-h-screen bg-gray-200">
       <div className="max-w-xl w-full space-y-6">
@@ -21,29 +38,60 @@ const PageProfile = () => {
               <h1 className="text-2xl font-bold text-gray-800">
                 {user?.username}
               </h1>
-              <p className="text-gray-500">
-                {user?.bio ? 'Aquí va la biografía del usuario. ¡Bienvenido a mi perfil de Clon Tuiter!' 
-                  : 'Este usuario aún no cargó su biografía'
-                }
-              </p>
+
+              {/* Lógica de edición de la biografía */}
+              {isEditingBio ? (
+                <div className="mt-2">
+                  <textarea
+                    value={editedBio}
+                    onChange={(e) => setEditedBio(e.target.value)}
+                    rows={3}
+                    placeholder="Escribe tu nueva biografía..."
+                    className="block w-full px-4 py-2 border border-sky-300 rounded-md shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
+                  ></textarea>
+                  <div className="mt-2 flex space-x-2 justify-end">
+                    <button
+                      onClick={() => setIsEditingBio(false)}
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={handleSaveBio}
+                      className="px-4 py-2 text-sm font-medium text-white bg-sky-500 rounded-md hover:bg-sky-600 transition"
+                    >
+                      Guardar
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex justify-between items-center mt-2">
+                  <p className="text-gray-500">
+                    {editedBio || "Este usuario aún no cargó su biografía"}
+                  </p>
+                  <button
+                    onClick={() => setIsEditingBio(true)}
+                    className="ml-4 p-2 rounded-full hover:bg-gray-200 transition"
+                  >
+                    <PencilSquareIcon className="h-5 w-5 text-gray-500" />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
           <div className="flex justify-around text-center border-t pt-4 mt-4">
             <div className="flex flex-col items-center">
-              <DocumentTextIcon className="h-6 w-6 text-gray-500 mb-1" />{" "}
-              {/* Icono de Posts */}
+              <DocumentTextIcon className="h-6 w-6 text-gray-500 mb-1" />
               <p className="font-bold text-gray-800">125</p>
               <p className="text-sm text-gray-500">Posts</p>
             </div>
             <div className="flex flex-col items-center">
-              <UsersIcon className="h-6 w-6 text-gray-500 mb-1" />{" "}
-              {/* Icono de Seguidores */}
+              <UsersIcon className="h-6 w-6 text-gray-500 mb-1" />
               <p className="font-bold text-gray-800">5.2K</p>
               <p className="text-sm text-gray-500">Seguidores</p>
             </div>
             <div className="flex flex-col items-center">
-              <UserPlusIcon className="h-6 w-6 text-gray-500 mb-1" />{" "}
-              {/* Icono de Siguiendo */}
+              <UserPlusIcon className="h-6 w-6 text-gray-500 mb-1" />
               <p className="font-bold text-gray-800">800</p>
               <p className="text-sm text-gray-500">Siguiendo</p>
             </div>
@@ -101,7 +149,6 @@ const PageProfile = () => {
               </button>
             </div>
           </div>
-          
         </div>
       </div>
     </div>
