@@ -5,8 +5,12 @@ import {
   UsersIcon, // Icono para Seguidores
   UserPlusIcon, // Icono para Siguiendo
 } from "@heroicons/react/24/outline";
+import { useAuthStore } from "../storage/authStorage";
 
 const PageProfile = () => {
+
+  //Obtener datos del usuarioç
+  const {user} = useAuthStore();
   return (
     <div className="flex items-start justify-center p-4 min-h-screen bg-gray-200">
       <div className="max-w-xl w-full space-y-6">
@@ -15,11 +19,12 @@ const PageProfile = () => {
           <div className="flex items-center space-x-4">
             <div>
               <h1 className="text-2xl font-bold text-gray-800">
-                @NombreDeUsuario
+                {user?.username}
               </h1>
               <p className="text-gray-500">
-                Aquí va la biografía del usuario. ¡Bienvenido a mi perfil de
-                Clon Tuiter!
+                {user?.bio ? 'Aquí va la biografía del usuario. ¡Bienvenido a mi perfil de Clon Tuiter!' 
+                  : 'Este usuario aún no cargó su biografía'
+                }
               </p>
             </div>
           </div>
