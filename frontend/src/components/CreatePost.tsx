@@ -2,7 +2,7 @@ const CreatePost = () => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <h3 className="text-lg font-bold text-gray-800 mb-4">
-        ¿Qué estás pensando, @NombreDeUsuario?
+        ¿Qué estás pensando?
       </h3>
       <form className="space-y-4">
         <textarea
