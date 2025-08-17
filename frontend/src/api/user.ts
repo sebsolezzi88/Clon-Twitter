@@ -60,6 +60,8 @@ export const editBio = async (data: BioFormData, token: string): Promise<ApiResp
             Authorization: `Bearer ${token}`, // Recibe el token como argumento
         };
 
+        console.log(`Formato del authorization: ${headers.Authorization}`)
+
         const res = await axios.patch<ApiResponse>(
             `${API_URL}/user/bio`,
             data,
@@ -67,11 +69,7 @@ export const editBio = async (data: BioFormData, token: string): Promise<ApiResp
         );
         return res.data;
     } catch (error) {
-        console.error(error);
-        if (axios.isAxiosError(error)) {
-            return error.response?.data;
-        } else {
-            throw new Error("Ocurrió un error inesperado.");
-        }
+        // Esta línea relanza el error para que el componente que llama lo capture.
+        throw error;
     }
 };

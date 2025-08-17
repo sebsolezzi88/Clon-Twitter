@@ -26,35 +26,48 @@ const PageProfile = () => {
     setEditedBio({ bio: user?.bio || '' });
   }, [user?.bio]); // Dependencia en user?.bio
 
-  const handleSaveBio = async () => {
-    try {
-      const response = await editBio(editedBio);
-      if (response.status === 'success') {
-        if (user) {
-          // Asegúrate de que editedBio.bio tenga el valor correcto
-          login({ ...user, bio: editedBio.bio });
-          toast.success("Biografía editada correctamente", {
+// En tu componente PageProfile.jsx
+const handleSaveBio = async () => {
+    // 1. Añadimos un console.log para verificar el usuario antes de la llamada.
+    // Esto ya lo hiciste y nos dio la clave del problema.
+    console.log("Usuario actual en el store:", user);
+
+    // 2. Verificamos que el token sea una cadena de texto válida y no undefined.
+    if (!user || !user.token || typeof user.token !== 'string') {
+        toast.error("Error: Token de usuario no disponible. Inténtalo de nuevo.", {
             theme: "colored",
             autoClose: 4000,
-          });
-        }
-      } else if (response.status === 'error') {
-        toast.error(response.msg, {
-          theme: "colored",
-          autoClose: 4000,
         });
-      }
-    } catch (error) {
-      // Manejo de errores para fallos de red o errores inesperados
-      toast.error("Error al guardar la biografía. Inténtalo de nuevo.", {
-        theme: "colored",
-        autoClose: 4000,
-      });
-      console.error("Error inesperado al editar la bio:", error);
-    } finally {
-      setIsEditingBio(false);
+        setIsEditingBio(false);
+        return; // Detenemos la función si no hay un token válido.
     }
-  };
+
+    try {
+        // 3. Pasamos explícitamente el token a la función de la API.
+        const response = await editBio(editedBio, user.token);
+        
+        if (response.status === 'success') {
+            login({ ...user, bio: editedBio.bio });
+            toast.success("Biografía editada correctamente", {
+                theme: "colored",
+                autoClose: 4000,
+            });
+        } else if (response.status === 'error') {
+            toast.error(response.msg, {
+                theme: "colored",
+                autoClose: 4000,
+            });
+        }
+    } catch (error) {
+        toast.error("Error al guardar la biografía. Inténtalo de nuevo.", {
+            theme: "colored",
+            autoClose: 4000,
+        });
+        console.error("Error inesperado al editar la bio:", error);
+    } finally {
+        setIsEditingBio(false);
+    }
+};
 
   return (
     <div className="flex items-start justify-center p-4 min-h-screen bg-gray-200">

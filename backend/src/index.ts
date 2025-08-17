@@ -10,8 +10,12 @@ import Post from './models/Post';
 const PORT = process.env.PORT || 3000;
 const app = express();
 
+app.use(cors({
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'], // Métodos permitidos
+  allowedHeaders: ['Content-Type', 'Authorization'], // Cabeceras permitidas
+}));
 app.use(express.json()); //Para leer los json
-app.use(cors()); //Uso de cors
 
 //Conexion a la base de datos
 getMongoConnection();
