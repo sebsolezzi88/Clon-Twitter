@@ -73,3 +73,23 @@ export const editBio = async (data: BioFormData, token: string): Promise<ApiResp
         throw error;
     }
 };
+
+// Funcion crearPost
+export const createPost = async (data: BioFormData, token: string): Promise<ApiResponse> => {
+    try {
+        const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, 
+        };
+
+        const res = await axios.post<ApiResponse>(
+            `${API_URL}/user/post`,
+            data,
+            { headers }
+        );
+        return res.data;
+    } catch (error) {
+        // Esta línea relanza el error para que el componente que llama lo capture.
+        throw error;
+    }
+};
