@@ -11,6 +11,7 @@ import { useAuthStore } from "../storage/authStorage";
 import type { BioFormData } from "../types/types";
 import { editBio } from "../api/user";
 import { toast } from "react-toastify";
+import CreatePost from "../components/CreatePost";
 
 const PageProfile = () => {
   // Obtener datos del usuario
@@ -145,27 +146,7 @@ const handleSaveBio = async () => {
         </div>
 
         {/* Sección para crear un nuevo Post */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">
-            ¿Qué estás pensando, @NombreDeUsuario?
-          </h3>
-          <form className="space-y-4">
-            <textarea
-              placeholder="Escribe tu nuevo post..."
-              rows={3}
-              className="block w-full px-4 py-2 border border-gray-300 rounded-md 
-                 focus:ring-sky-500 focus:border-sky-500"
-            ></textarea>
-            <button
-              type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent 
-                 rounded-md shadow-sm text-sm font-black text-white bg-sky-500 
-                 hover:bg-sky-600 transition duration-300"
-            >
-              Publicar
-            </button>
-          </form>
-        </div>
+        <CreatePost/>
 
         {/* Feed de Posts del Usuario */}
         <div className="space-y-6">
