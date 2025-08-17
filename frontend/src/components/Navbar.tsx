@@ -31,7 +31,7 @@ const Header = () => {
           {isAuthenticated ? (
             <>
               <Link
-                to="/registro"
+                to="/perfil"
                 className="hover:text-sky-200 font-bold transition-colors"
               >
                 Perfil
@@ -88,24 +88,49 @@ const Header = () => {
                 Inicio
               </Link>
             </li>
-            <li>
-              <Link
-                to="/registro"
-                onClick={toggleMenu}
-                className="block bg-sky-600 p-2 rounded-md hover:bg-sky-700 transition-colors"
-              >
-                Registro
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/login"
-                onClick={toggleMenu}
-                className="block bg-sky-600 p-2 rounded-md hover:bg-sky-700 transition-colors"
-              >
-                Login
-              </Link>
-            </li>
+            {isAuthenticated ? (
+              <>
+                <li>
+                  <Link
+                    to="/perfil"
+                    onClick={toggleMenu}
+                    className="block bg-sky-600 p-2 rounded-md hover:bg-sky-700 transition-colors"
+                  >
+                    Perfil
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/logout"
+                    onClick={toggleMenu}
+                    className="block bg-sky-600 p-2 rounded-md hover:bg-sky-700 transition-colors"
+                  >
+                    Logout
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link
+                    to="/registro"
+                    onClick={toggleMenu}
+                    className="block bg-sky-600 p-2 rounded-md hover:bg-sky-700 transition-colors"
+                  >
+                    Registro
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/login"
+                    onClick={toggleMenu}
+                    className="block bg-sky-600 p-2 rounded-md hover:bg-sky-700 transition-colors"
+                  >
+                    Login
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       )}
