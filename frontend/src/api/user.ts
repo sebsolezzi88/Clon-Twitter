@@ -52,35 +52,26 @@ export const loginUser = async (
   }
 };
 
-//Funcion para editar la bio
-export const editBio = async (data: BioFormData): Promise<ApiResponse> => {
-  try {
-    const { user } = useAuthStore();
-    const authToken = user?.token;
+// Funcion para editar la bio
+export const editBio = async (data: BioFormData, token: string): Promise<ApiResponse> => {
+    try {
+        const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Recibe el token como argumento
+        };
 
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    };
-    if (!authToken) {
-      console.error(
-        "No hay token de autenticación disponible. El usuario no está logueado."
-      );
-      throw new Error("No autenticado.");
+        const res = await axios.patch<ApiResponse>(
+            `${API_URL}/user/bio`,
+            data,
+            { headers }
+        );
+        return res.data;
+    } catch (error) {
+        console.error(error);
+        if (axios.isAxiosError(error)) {
+            return error.response?.data;
+        } else {
+            throw new Error("Ocurrió un error inesperado.");
+        }
     }
-    const res = await axios.patch<ApiResponse>(
-      `${API_URL}/user/bio`,
-      data,
-      { headers }
-    );
-    return res.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      // Devuelve el objeto de error completo para que sea manejado por quien llama a la función
-      return error.response?.data;
-    } else {
-      // Lanza un error genérico para errores inesperados
-      throw new Error("Ocurrió un error inesperado.");
-    }
-  }
 };
