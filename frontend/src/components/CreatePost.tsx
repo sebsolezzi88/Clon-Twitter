@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import type { PostFormData } from "../types/types";
+import { toast } from "react-toastify";
 
 const CreatePost = () => {
   //Estado del formulario a enviar
@@ -8,14 +9,22 @@ const CreatePost = () => {
     image: "",
   });
 
-  
+  const handletSubmitPost = async (e: FormEvent) => {
+    e.preventDefault();
+    if(postFormData.text.trim() ===''){
+        return toast.error('El texto de tu post en obligatorio', {
+        theme: "colored",
+        autoClose: 4000,
+      })
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <h3 className="text-lg font-bold text-gray-800 mb-4">
         ¿Qué estás pensando?
       </h3>
-      <form className="space-y-4">
+      <form onSubmit={handletSubmitPost} className="space-y-4">
         <textarea
           onChange={(e) =>
             setPostFormData({
