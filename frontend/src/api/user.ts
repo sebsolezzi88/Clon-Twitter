@@ -4,6 +4,7 @@ import type {
   BioFormData,
   LoginApiPostResponse,
   LoginFormData,
+  PostFormData,
   RegisterFormData,
 } from "../types/types";
 import { useAuthStore } from "../storage/authStorage";
@@ -75,7 +76,7 @@ export const editBio = async (data: BioFormData, token: string): Promise<ApiResp
 };
 
 // Funcion crearPost
-export const createPost = async (data: BioFormData, token: string): Promise<ApiResponse> => {
+export const createPost = async (data: PostFormData, token: string): Promise<ApiResponse> => {
     try {
         const headers = {
             "Content-Type": "application/json",
