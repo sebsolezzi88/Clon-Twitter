@@ -9,9 +9,31 @@ import PageMain from './pages/PageMain';
 import { PageRegister } from './pages/PageRegister';
 import { PageLogin } from './pages/PageLogin';
 import PageProfile from './pages/PageProfile';
+import { useAuthStore } from './storage/authStorage';
+import { useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 function App() {
+ const { user, logout } = useAuthStore();
 
+    useEffect(() => {
+        // Solo valida si hay un usuario logueado
+        if (user && user.token) {
+            try {
+                // Decodifica el token para obtener la información de la carga útil
+                const decodedToken = jwtDecode(user.token);
+                // El tiempo de caducidad (exp) está en segundos, y la fecha actual en milisegundos
+                if (decodedToken.exp! * 1000 < Date.now()) {
+                    console.log('Token expirado. Cerrando sesión.');
+                    logout();
+                }
+            } catch (error) {
+                // Maneja errores de token malformado o inválido
+                console.error('Error al decodificar el token:', error);
+                logout();
+            }
+        }
+    }, [user, logout]);
 
   return (
     <>
