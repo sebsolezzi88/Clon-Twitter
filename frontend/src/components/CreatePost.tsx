@@ -1,8 +1,11 @@
 import { useState, type FormEvent } from "react";
 import type { PostFormData } from "../types/types";
 import { toast } from "react-toastify";
+import { useAuthStore } from "../storage/authStorage";
 
 const CreatePost = () => {
+  // Obtener datos del usuario
+  const { user } = useAuthStore();
   //Estado del formulario a enviar
   const [postFormData, setPostFormData] = useState<PostFormData>({
     text: "",
@@ -11,11 +14,11 @@ const CreatePost = () => {
 
   const handletSubmitPost = async (e: FormEvent) => {
     e.preventDefault();
-    if(postFormData.text.trim() ===''){
-        return toast.error('El texto de tu post en obligatorio', {
+    if (postFormData.text.trim() === "") {
+      return toast.error("El texto de tu post en obligatorio", {
         theme: "colored",
         autoClose: 4000,
-      })
+      });
     }
   };
 
