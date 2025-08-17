@@ -84,7 +84,7 @@ export const createPost = async (data: PostFormData, token: string): Promise<Api
         };
 
         const res = await axios.post<ApiResponse>(
-            `${API_URL}/user/post`,
+            `${API_URL}/post`,
             data,
             { headers }
         );

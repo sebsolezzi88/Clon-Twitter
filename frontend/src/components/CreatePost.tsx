@@ -65,6 +65,8 @@ const CreatePost = () => {
               [e.target.name]: e.target.value,
             })
           }
+          name="text"
+          id="text"
           value={postFormData.text}
           placeholder="Escribe tu nuevo post..."
           rows={3}
