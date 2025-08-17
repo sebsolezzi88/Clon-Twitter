@@ -1,26 +1,35 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { useAuthStore } from "../storage/authStorage";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  //Verificar si esta logueado para mostrar links de manera condicional
-  const { isAuthenticated } = useAuthStore();
+  // Obtener el estado y las funciones del store
+  const { isAuthenticated, logout } = useAuthStore();
+  const navigate = useNavigate();
+
+  // Función para manejar el logout
+  const handleLogout = () => {
+    logout(); // Llama a la función de logout del store
+    toast.info("Haz cerrado seción", {
+                theme: "colored",
+                autoClose: 4000,
+            });
+    navigate("/login"); // Redirige a la página de login después de cerrar la sesión
+  };
 
   return (
     <header className="bg-sky-500 p-4 mb-6 text-white shadow-md">
       <div className="flex justify-between items-center">
-        {/* Logo / título */}
         <Link to="/">
           <h1 className="text-2xl font-bold">Clon Tuiter</h1>
         </Link>
 
         {/* Menú en escritorio */}
-        {/* El menú de escritorio está oculto por defecto (hidden) y se muestra como flex en pantallas 'md' o más grandes */}
         <nav className="hidden md:flex space-x-4 items-center">
           <Link
             to="/"
@@ -36,12 +45,13 @@ const Header = () => {
               >
                 Perfil
               </Link>
-              <Link
-                to="/registro"
+              {/* Cambiado a botón para ejecutar la función */}
+              <button
+                onClick={handleLogout}
                 className="hover:text-sky-200 font-bold transition-colors"
               >
                 Logout
-              </Link>
+              </button>
             </>
           ) : (
             <>
@@ -62,7 +72,6 @@ const Header = () => {
         </nav>
 
         {/* Botón hamburguesa en móviles */}
-        {/* El botón de la hamburguesa se muestra por defecto (flex) y se oculta en pantallas 'md' o más grandes */}
         <div className="flex md:hidden">
           <button onClick={toggleMenu} className="p-2 rounded hover:bg-sky-600">
             {isOpen ? (
@@ -75,7 +84,6 @@ const Header = () => {
       </div>
 
       {/* Menú desplegable en móviles */}
-      {/* Se muestra si isOpen es true y se oculta en pantallas 'md' o más grandes */}
       {isOpen && (
         <nav className="md:hidden mt-4">
           <ul className="flex flex-col space-y-2">
@@ -100,13 +108,16 @@ const Header = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/logout"
-                    onClick={toggleMenu}
-                    className="block bg-sky-600 p-2 rounded-md hover:bg-sky-700 transition-colors"
+                  {/* Botón para móviles */}
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      toggleMenu();
+                    }}
+                    className="block w-full text-left bg-sky-600 p-2 rounded-md hover:bg-sky-700 transition-colors"
                   >
                     Logout
-                  </Link>
+                  </button>
                 </li>
               </>
             ) : (
