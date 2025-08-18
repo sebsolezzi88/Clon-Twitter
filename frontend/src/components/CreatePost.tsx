@@ -26,6 +26,12 @@ const CreatePost = ({ posts, setPosts }: CreatePostProps) => {
         autoClose: 4000,
       });
     }
+    if (postFormData.text.length === 200 ) {
+      return toast.error("El texto no puede superar los 200 caracteres", {
+        theme: "colored",
+        autoClose: 4000,
+      });
+    }
     //Verificar user y token
     if (!user || !user.token || typeof user.token !== "string") {
       toast.error(
