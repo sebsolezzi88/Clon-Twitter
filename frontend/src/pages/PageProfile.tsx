@@ -8,7 +8,7 @@ import {
   PencilSquareIcon, // Icono de edición
 } from "@heroicons/react/24/outline";
 import { useAuthStore } from "../storage/authStorage";
-import type { BioFormData } from "../types/types";
+import type { BioFormData, Post } from "../types/types";
 import { editBio } from "../api/user";
 import { toast } from "react-toastify";
 import CreatePost from "../components/CreatePost";
@@ -19,6 +19,8 @@ const PageProfile = () => {
 
   // Estados para controlar la edición de la biografía
   const [isEditingBio, setIsEditingBio] = useState(false);
+  //Estados para los post
+  const [posts, setPosts] = useState<Post[]>([]);
   // Inicializa editedBio con el valor actual de user?.bio
   const [editedBio, setEditedBio] = useState<BioFormData>({ bio: user?.bio || '' });
 
