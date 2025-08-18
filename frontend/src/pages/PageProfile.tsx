@@ -12,6 +12,7 @@ import type { BioFormData, Post } from "../types/types";
 import { editBio, getUserPosts } from "../api/user";
 import { toast } from "react-toastify";
 import CreatePost from "../components/CreatePost";
+import UserProfilePost from "../components/UserProfilePost";
 
 const PageProfile = () => {
   // Obtener datos del usuario
@@ -47,7 +48,7 @@ const PageProfile = () => {
       try {
         const response = await getUserPosts(user.token);
         if (response.status === "success") {
-          console.log(response.posts)
+          console.log(response.posts);
           setPosts(response.posts);
         } else {
           console.error("Error al obtener los posts:", response.msg);
@@ -188,31 +189,11 @@ const PageProfile = () => {
         {/* Feed de Posts del Usuario */}
         <div className="space-y-6">
           {/* Ejemplo de un Post */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="flex items-center space-x-4 mb-4">
-              <div>
-                <span className="font-bold text-gray-800">
-                  @NombreDeUsuario
-                </span>
-                <span className="text-sm text-gray-500 ml-2">
-                  hace 5 minutos
-                </span>
-              </div>
-            </div>
-            <p className="text-gray-700">
-              ¡Hola a todos! Este es mi primer post en mi Clon de Tuiter.
-            </p>
-            <div className="flex items-center space-x-6 mt-4 text-gray-500">
-              <button className="flex items-center space-x-1 hover:text-sky-500 transition-colors">
-                <ChatBubbleLeftIcon className="h-6 w-6 text-gray-500 hover:text-sky-500" />
-                <span>5</span>
-              </button>
-              <button className="flex items-center space-x-1 hover:text-sky-500 transition-colors">
-                <HeartIcon className="h-6 w-6 text-gray-500 hover:text-sky-500" />
-                <span>12</span>
-              </button>
-            </div>
-          </div>
+          {posts.length > 0 ? (
+            <p>No haz creado ningún post</p>
+          ) : (
+            posts.map((post) => <UserProfilePost post={post} />)
+          )}
         </div>
       </div>
     </div>
