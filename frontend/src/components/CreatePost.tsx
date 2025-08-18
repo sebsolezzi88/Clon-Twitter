@@ -1,10 +1,14 @@
 import { useState, type FormEvent } from "react";
-import type { PostFormData } from "../types/types";
+import type { Post, PostFormData } from "../types/types";
 import { toast } from "react-toastify";
 import { useAuthStore } from "../storage/authStorage";
 import { createPost } from "../api/user";
 
-const CreatePost = () => {
+interface CreatePostProps {
+  setPosts: React.Dispatch<React.SetStateAction<Post[]>>
+}
+
+const CreatePost = ({setPosts}:CreatePostProps) => {
   // Obtener datos del usuario
   const { user } = useAuthStore();
   //Estado del formulario a enviar
