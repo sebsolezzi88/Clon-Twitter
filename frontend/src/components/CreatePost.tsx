@@ -5,11 +5,11 @@ import { useAuthStore } from "../storage/authStorage";
 import { createPost } from "../api/user";
 
 interface CreatePostProps {
-  posts:Post[];
-  setPosts: React.Dispatch<React.SetStateAction<Post[]>>
+  posts: Post[];
+  setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
 }
 
-const CreatePost = ({posts, setPosts}:CreatePostProps) => {
+const CreatePost = ({ posts, setPosts }: CreatePostProps) => {
   // Obtener datos del usuario
   const { user } = useAuthStore();
   //Estado del formulario a enviar
@@ -27,36 +27,44 @@ const CreatePost = ({posts, setPosts}:CreatePostProps) => {
       });
     }
     //Verificar user y token
-    if (!user || !user.token || typeof user.token !== 'string') {
-            toast.error("Error: Token de usuario no disponible. Inténtalo de nuevo.", {
-                theme: "colored",
-                autoClose: 4000,
-            });
+    if (!user || !user.token || typeof user.token !== "string") {
+      toast.error(
+        "Error: Token de usuario no disponible. Inténtalo de nuevo.",
+        {
+          theme: "colored",
+          autoClose: 4000,
+        }
+      );
     }
-     try {
-            // 3. Pasamos explícitamente el token a la función de la API.
-            const response = await createPost(postFormData, user!.token);
-            
-            if (response.status === 'success') {
-                toast.success("Post Creado", {
-                    theme: "colored",
-                    autoClose: 4000,
-                });
-                //Agregando al estado el nuevo post
-                setPosts([...posts,response.post])
-            } else if (response.status === 'error') {
-                toast.error(response.msg, {
-                    theme: "colored",
-                    autoClose: 4000,
-                });
-            }
-        } catch (error) {
-            toast.error("Error al crear Post. Inténtalo de nuevo.", {
-                theme: "colored",
-                autoClose: 4000,
-            });
-            console.error("Error inesperado al editar la bio:", error);
-        } 
+    try {
+      // 3. Pasamos explícitamente el token a la función de la API.
+      const response = await createPost(postFormData, user!.token);
+
+      if (response.status === "success") {
+        toast.success("Post Creado", {
+          theme: "colored",
+          autoClose: 4000,
+        });
+        //Agregando al estado el nuevo post
+        setPosts([...posts, response.post]);
+      } else if (response.status === "error") {
+        toast.error(response.msg, {
+          theme: "colored",
+          autoClose: 4000,
+        });
+      }
+    } catch (error) {
+      toast.error("Error al crear Post. Inténtalo de nuevo.", {
+        theme: "colored",
+        autoClose: 4000,
+      });
+      console.error("Error inesperado al editar la bio:", error);
+    } finally {
+      setPostFormData({
+        text: "",
+        image: "",
+      });
+    }
   };
 
   return (
