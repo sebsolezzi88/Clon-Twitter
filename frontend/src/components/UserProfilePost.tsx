@@ -2,10 +2,10 @@ import { ChatBubbleLeftIcon, HeartIcon } from '@heroicons/react/24/outline'
 import type { Post } from '../types/types'
 
 interface UserProfilePostProps{
-    posts:Post[];
+    post:Post;
 }
 
-const UserProfilePost = ({posts}:UserProfilePostProps) => {
+const UserProfilePost = ({post}:UserProfilePostProps) => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center space-x-4 mb-4">
