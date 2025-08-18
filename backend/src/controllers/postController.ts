@@ -125,7 +125,7 @@ export const getPostByUserTokenId = async (req: Request, res: Response): Promise
         }
 
         //Buscar los post del usuario
-        const postsExist = await Post.find({ author: req.userId });
+        const postsExist = await Post.find({ author: req.userId }).sort({ createdAt: -1 });
 
 
         return res.status(201).json({ status: 'success', msg: 'Post deleted', posts: postsExist })

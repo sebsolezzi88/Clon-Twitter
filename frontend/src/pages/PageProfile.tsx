@@ -9,7 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAuthStore } from "../storage/authStorage";
 import type { BioFormData, Post } from "../types/types";
-import { editBio } from "../api/user";
+import { editBio, getUserPosts } from "../api/user";
 import { toast } from "react-toastify";
 import CreatePost from "../components/CreatePost";
 
@@ -22,55 +22,88 @@ const PageProfile = () => {
   //Estados para los post
   const [posts, setPosts] = useState<Post[]>([]);
   // Inicializa editedBio con el valor actual de user?.bio
-  const [editedBio, setEditedBio] = useState<BioFormData>({ bio: user?.bio || '' });
+  const [editedBio, setEditedBio] = useState<BioFormData>({
+    bio: user?.bio || "",
+  });
 
-  // Usa useEffect para actualizar editedBio si user.bio cambia (por ejemplo, al cargar la página)
+  // useEffect para actualizar editedBio si user.bio cambia (por ejemplo, al cargar la página)
   useEffect(() => {
-    setEditedBio({ bio: user?.bio || '' });
+    setEditedBio({ bio: user?.bio || "" });
   }, [user?.bio]); // Dependencia en user?.bio
 
-// En tu componente PageProfile.jsx
-const handleSaveBio = async () => {
+  //useEffect para obtener los post de la base de datos
+  useEffect(() => {
+    const getPost = async () => {
+      if (!user || !user.token || typeof user.token !== "string") {
+        toast.error(
+          "Error: Token de usuario no disponible. Inténtalo de nuevo.",
+          {
+            theme: "colored",
+            autoClose: 4000,
+          }
+        );
+        return; // Detenemos la función si no hay un token válido.
+      }
+      try {
+        const response = await getUserPosts(user.token);
+        if (response.status === "success") {
+          console.log(response.posts)
+          setPosts(response.posts);
+        } else {
+          console.error("Error al obtener los posts:", response.msg);
+        }
+      } catch (error) {
+        console.error("Error inesperado al obtener los posts:", error);
+      }
+    };
+    getPost();
+  }, []);
+
+  // En tu componente PageProfile.jsx
+  const handleSaveBio = async () => {
     // 1. Añadimos un console.log para verificar el usuario antes de la llamada.
     // Esto ya lo hiciste y nos dio la clave del problema.
     console.log("Usuario actual en el store:", user);
 
     // 2. Verificamos que el token sea una cadena de texto válida y no undefined.
-    if (!user || !user.token || typeof user.token !== 'string') {
-        toast.error("Error: Token de usuario no disponible. Inténtalo de nuevo.", {
-            theme: "colored",
-            autoClose: 4000,
-        });
-        setIsEditingBio(false);
-        return; // Detenemos la función si no hay un token válido.
+    if (!user || !user.token || typeof user.token !== "string") {
+      toast.error(
+        "Error: Token de usuario no disponible. Inténtalo de nuevo.",
+        {
+          theme: "colored",
+          autoClose: 4000,
+        }
+      );
+      setIsEditingBio(false);
+      return; // Detenemos la función si no hay un token válido.
     }
 
     try {
-        // 3. Pasamos explícitamente el token a la función de la API.
-        const response = await editBio(editedBio, user.token);
-        
-        if (response.status === 'success') {
-            login({ ...user, bio: editedBio.bio });
-            toast.success("Biografía editada correctamente", {
-                theme: "colored",
-                autoClose: 4000,
-            });
-        } else if (response.status === 'error') {
-            toast.error(response.msg, {
-                theme: "colored",
-                autoClose: 4000,
-            });
-        }
-    } catch (error) {
-        toast.error("Error al guardar la biografía. Inténtalo de nuevo.", {
-            theme: "colored",
-            autoClose: 4000,
+      // 3. Pasamos explícitamente el token a la función de la API.
+      const response = await editBio(editedBio, user.token);
+
+      if (response.status === "success") {
+        login({ ...user, bio: editedBio.bio });
+        toast.success("Biografía editada correctamente", {
+          theme: "colored",
+          autoClose: 4000,
         });
-        console.error("Error inesperado al editar la bio:", error);
+      } else if (response.status === "error") {
+        toast.error(response.msg, {
+          theme: "colored",
+          autoClose: 4000,
+        });
+      }
+    } catch (error) {
+      toast.error("Error al guardar la biografía. Inténtalo de nuevo.", {
+        theme: "colored",
+        autoClose: 4000,
+      });
+      console.error("Error inesperado al editar la bio:", error);
     } finally {
-        setIsEditingBio(false);
+      setIsEditingBio(false);
     }
-};
+  };
 
   return (
     <div className="flex items-start justify-center p-4 min-h-screen bg-gray-200">
@@ -88,7 +121,9 @@ const handleSaveBio = async () => {
                 <div className="mt-2">
                   <textarea
                     value={editedBio.bio}
-                    onChange={(e) => setEditedBio({ ...editedBio, bio: e.target.value })} // Cambiado a bio: e.target.value
+                    onChange={(e) =>
+                      setEditedBio({ ...editedBio, bio: e.target.value })
+                    } // Cambiado a bio: e.target.value
                     rows={3}
                     name="bio" // Asegúrate de que el name sea 'bio'
                     placeholder="Escribe tu nueva biografía..."
@@ -99,7 +134,7 @@ const handleSaveBio = async () => {
                       onClick={() => {
                         setIsEditingBio(false);
                         // Restablece editedBio a la bio original del usuario si cancela
-                        setEditedBio({ bio: user?.bio || '' });
+                        setEditedBio({ bio: user?.bio || "" });
                       }}
                       className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition"
                     >
@@ -148,7 +183,7 @@ const handleSaveBio = async () => {
         </div>
 
         {/* Sección para crear un nuevo Post */}
-        <CreatePost/>
+        <CreatePost />
 
         {/* Feed de Posts del Usuario */}
         <div className="space-y-6">
