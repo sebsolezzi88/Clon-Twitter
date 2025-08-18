@@ -184,7 +184,7 @@ const PageProfile = () => {
         </div>
 
         {/* Sección para crear un nuevo Post */}
-        <CreatePost setPosts={setPosts}  />
+        <CreatePost posts={posts} setPosts={setPosts}  />
 
         {/* Feed de Posts del Usuario */}
         <div className="space-y-6">

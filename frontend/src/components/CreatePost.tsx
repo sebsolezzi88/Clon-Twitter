@@ -5,6 +5,7 @@ import { useAuthStore } from "../storage/authStorage";
 import { createPost } from "../api/user";
 
 interface CreatePostProps {
+  posts:Post[];
   setPosts: React.Dispatch<React.SetStateAction<Post[]>>
 }
 
@@ -41,6 +42,8 @@ const CreatePost = ({setPosts}:CreatePostProps) => {
                     theme: "colored",
                     autoClose: 4000,
                 });
+                //Agregando al estado el nuevo post
+                setPosts([])
             } else if (response.status === 'error') {
                 toast.error(response.msg, {
                     theme: "colored",
