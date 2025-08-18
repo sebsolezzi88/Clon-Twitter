@@ -190,7 +190,7 @@ const PageProfile = () => {
         <div className="space-y-6">
           {/* Ejemplo de un Post */}
           {posts.length > 0 ? (
-            posts.map((post) => <UserProfilePost key={post._id} post={post} />)
+            posts.map((post) => <UserProfilePost key={post._id} post={post} userName={user?.username!} />)
           ) : (
             <p className="text-center text-gray-500">
               Aún no hay posts para mostrar.
