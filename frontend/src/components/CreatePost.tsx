@@ -9,7 +9,7 @@ interface CreatePostProps {
   setPosts: React.Dispatch<React.SetStateAction<Post[]>>
 }
 
-const CreatePost = ({setPosts}:CreatePostProps) => {
+const CreatePost = ({posts, setPosts}:CreatePostProps) => {
   // Obtener datos del usuario
   const { user } = useAuthStore();
   //Estado del formulario a enviar
@@ -43,7 +43,7 @@ const CreatePost = ({setPosts}:CreatePostProps) => {
                     autoClose: 4000,
                 });
                 //Agregando al estado el nuevo post
-                setPosts([])
+                setPosts([...posts,response.post])
             } else if (response.status === 'error') {
                 toast.error(response.msg, {
                     theme: "colored",
