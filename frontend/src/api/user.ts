@@ -97,10 +97,13 @@ export const createPost = async (data: PostFormData, token: string): Promise<Api
 };
 
 //Funcion para obtener los post de un usuario por su id
-export const getUserPosts = async (userId: string): Promise<ApiGetPostsResponse> => {
+export const getUserPosts = async (token: string): Promise<ApiGetPostsResponse> => {
     try {
-        
-        const res = await axios.get<ApiGetPostsResponse>(`${API_URL}/post/${userId}`, {  });
+        const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, 
+        };
+        const res = await axios.get<ApiGetPostsResponse>(`${API_URL}/post`, { headers });
         return res.data;
     } catch (error) {
         if (axios.isAxiosError(error)) {
