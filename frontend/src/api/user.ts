@@ -1,5 +1,6 @@
 import axios from "axios";
 import type {
+  ApiCreatePostResponse,
   ApiGetPostsResponse,
   ApiResponse,
   BioFormData,
@@ -77,14 +78,14 @@ export const editBio = async (data: BioFormData, token: string): Promise<ApiResp
 };
 
 // Funcion crearPost
-export const createPost = async (data: PostFormData, token: string): Promise<ApiResponse> => {
+export const createPost = async (data: PostFormData, token: string): Promise<ApiCreatePostResponse> => {
     try {
         const headers = {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`, 
         };
 
-        const res = await axios.post<ApiResponse>(
+        const res = await axios.post<ApiCreatePostResponse>(
             `${API_URL}/post`,
             data,
             { headers }
