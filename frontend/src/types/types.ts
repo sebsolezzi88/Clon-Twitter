@@ -60,3 +60,7 @@ export interface Post {
   createdAt: Date;
 }
 export type PostFormData = Pick<Post, "text" | "image">
+
+export interface ApiGetPostsResponse extends ApiResponse{
+  posts:Post[];
+}
