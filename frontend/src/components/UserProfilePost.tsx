@@ -19,7 +19,7 @@ const UserProfilePost = ({post}:UserProfilePostProps) => {
               </div>
             </div>
             <p className="text-gray-700">
-              ¡Hola a todos! Este es mi primer post en mi Clon de Tuiter.
+              {post.text}
             </p>
             <div className="flex items-center space-x-6 mt-4 text-gray-500">
               <button className="flex items-center space-x-1 hover:text-sky-500 transition-colors">
