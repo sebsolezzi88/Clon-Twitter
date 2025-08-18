@@ -62,6 +62,10 @@ export interface Post {
 }
 export type PostFormData = Pick<Post, "text" | "image">
 
+export interface ApiCreatePostResponse extends ApiResponse{
+  post:Post;
+}
+
 export interface ApiGetPostsResponse extends ApiResponse{
   posts:Post[];
 }
