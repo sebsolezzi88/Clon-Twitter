@@ -115,6 +115,25 @@ export const getPostByUserId = async (req: Request, res: Response): Promise<Resp
         return res.status(500).json({ status: 'error', msg: 'Server Error' })
     }
 }
+//Obtner los post del user pero por el id que viene en su token
+export const getPostByUserTokenId = async (req: Request, res: Response): Promise<Response> => {
+    try {
+
+        
+        if (!req.userId || !isValidObjectId(req.userId)) {
+            return res.status(400).json({ status: 'error', msg: 'Id requeried' });
+        }
+
+        //Buscar los post del usuario
+        const postsExist = await Post.find({ author: req.userId });
+
+
+        return res.status(201).json({ status: 'success', msg: 'Post deleted', posts: postsExist })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ status: 'error', msg: 'Server Error' })
+    }
+}
 
 //Funcion para comentar Post
 export const commentPost = async (req: Request, res: Response): Promise<Response> => {
