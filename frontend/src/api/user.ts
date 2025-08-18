@@ -1,5 +1,6 @@
 import axios from "axios";
 import type {
+  ApiGetPostsResponse,
   ApiResponse,
   BioFormData,
   LoginApiPostResponse,
@@ -92,5 +93,20 @@ export const createPost = async (data: PostFormData, token: string): Promise<Api
     } catch (error) {
         // Esta línea relanza el error para que el componente que llama lo capture.
         throw error;
+    }
+};
+
+//Funcion para obtener los post de un usuario por su id
+export const getUserPosts = async (userId: string): Promise<ApiGetPostsResponse> => {
+    try {
+        
+        const res = await axios.get<ApiGetPostsResponse>(`${API_URL}/post/${userId}`, {  });
+        return res.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return error.response?.data;
+        } else {
+            throw new Error('Ocurrió un error inesperado al obtener los posts.');
+        }
     }
 };
