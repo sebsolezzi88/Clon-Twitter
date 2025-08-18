@@ -10,6 +10,8 @@ interface CreatePostProps {
 }
 
 const CreatePost = ({ posts, setPosts }: CreatePostProps) => {
+  //Estado de saving para bloquer el boton
+  const [saving, setSaving] = useState<boolean>(false);
   // Obtener datos del usuario
   const { user } = useAuthStore();
   //Estado del formulario a enviar
@@ -26,7 +28,7 @@ const CreatePost = ({ posts, setPosts }: CreatePostProps) => {
         autoClose: 4000,
       });
     }
-    if (postFormData.text.length === 200 ) {
+    if (postFormData.text.length === 200) {
       return toast.error("El texto no puede superar los 200 caracteres", {
         theme: "colored",
         autoClose: 4000,
@@ -43,6 +45,7 @@ const CreatePost = ({ posts, setPosts }: CreatePostProps) => {
       );
     }
     try {
+      setSaving(true);
       // 3. Pasamos explícitamente el token a la función de la API.
       const response = await createPost(postFormData, user!.token);
 
@@ -52,7 +55,7 @@ const CreatePost = ({ posts, setPosts }: CreatePostProps) => {
           autoClose: 4000,
         });
         //Agregando al estado el nuevo post
-        setPosts([...posts, response.post]);
+        setPosts([response.post, ...posts]);
       } else if (response.status === "error") {
         toast.error(response.msg, {
           theme: "colored",
@@ -66,6 +69,7 @@ const CreatePost = ({ posts, setPosts }: CreatePostProps) => {
       });
       console.error("Error inesperado al editar la bio:", error);
     } finally {
+      setSaving(false);
       setPostFormData({
         text: "",
         image: "",
@@ -118,10 +122,17 @@ const CreatePost = ({ posts, setPosts }: CreatePostProps) => {
           />
         </div>
         <button
+          disabled={saving}
           type="submit"
-          className="w-full flex justify-center py-2 px-4 border border-transparent 
-                 rounded-md shadow-sm text-sm font-black text-white bg-sky-500 
-                 hover:bg-sky-600 transition duration-300"
+          className={`w-full flex justify-center py-2 px-4 border border-transparent 
+                 rounded-md shadow-sm text-sm font-black text-white 
+                  transition duration-300
+                 ${
+                   saving
+                     ? "bg-gray-400 cursor-not-allowed"
+                     : "bg-sky-500 hover:bg-sky-600 "
+                 }
+                 `}
         >
           Publicar
         </button>
