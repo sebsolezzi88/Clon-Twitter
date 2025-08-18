@@ -22,14 +22,15 @@ const UserProfilePost = ({post,userName}:UserProfilePostProps) => {
             <p className="text-gray-700">
               {post.text}
             </p>
+            {post.image && <img src={post.image}/>}
             <div className="flex items-center space-x-6 mt-4 text-gray-500">
               <button className="flex items-center space-x-1 hover:text-sky-500 transition-colors">
                 <ChatBubbleLeftIcon className="h-6 w-6 text-gray-500 hover:text-sky-500" />
-                <span>5</span>
+                <span>{post.comments?.length}</span>
               </button>
               <button className="flex items-center space-x-1 hover:text-sky-500 transition-colors">
                 <HeartIcon className="h-6 w-6 text-gray-500 hover:text-sky-500" />
-                <span>12</span>
+                <span>{post.likes?.length}</span>
               </button>
             </div>
           </div>
