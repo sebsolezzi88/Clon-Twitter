@@ -1,7 +1,11 @@
 import { ChatBubbleLeftIcon, HeartIcon } from '@heroicons/react/24/outline'
-import React from 'react'
+import type { Post } from '../types/types'
 
-const UserProfilePost = () => {
+interface UserProfilePostProps{
+    posts:Post[];
+}
+
+const UserProfilePost = ({posts}:UserProfilePostProps) => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center space-x-4 mb-4">
