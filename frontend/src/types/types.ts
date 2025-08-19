@@ -69,3 +69,9 @@ export interface ApiCreatePostResponse extends ApiResponse{
 export interface ApiGetPostsResponse extends ApiResponse{
   posts:Post[];
 }
+
+//Para obtener datos del usuario sin token
+type UserData = Pick<User, 'followers' | 'following' | 'username' | 'bio'>
+export interface ApiGetUserDataResponse extends ApiResponse{
+  userData: UserData
+}
