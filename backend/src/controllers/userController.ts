@@ -150,6 +150,7 @@ export const loginUser = async (req: Request, res: Response): Promise<Response> 
             { expiresIn: '3d' }
         );
         const userData = {
+            id:userExist._id,
             bio:userExist.bio,
             username: userExist.username,
             token
