@@ -167,7 +167,7 @@ const PageProfile = () => {
           <div className="flex justify-around text-center border-t pt-4 mt-4">
             <div className="flex flex-col items-center">
               <DocumentTextIcon className="h-6 w-6 text-gray-500 mb-1" />
-              <p className="font-bold text-gray-800">125</p>
+              <p className="font-bold text-gray-800">{posts.length}</p>
               <p className="text-sm text-gray-500">Posts</p>
             </div>
             <div className="flex flex-col items-center">
