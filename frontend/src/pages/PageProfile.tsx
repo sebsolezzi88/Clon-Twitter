@@ -9,17 +9,26 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAuthStore } from "../storage/authStorage";
 import type { BioFormData, Post } from "../types/types";
-import { editBio, getUserPosts } from "../api/user";
+import { editBio, getUserDataById, getUserPosts } from "../api/user";
 import { toast } from "react-toastify";
 import CreatePost from "../components/CreatePost";
 import UserProfilePost from "../components/UserProfilePost";
 
 const PageProfile = () => {
+  interface FollowData {
+    followers: string[];
+    following: string[];
+  }
   // Obtener datos del usuario
   const { user, login } = useAuthStore();
 
   // Estados para controlar la edición de la biografía
   const [isEditingBio, setIsEditingBio] = useState(false);
+  //Estados para datos de follinfs y followers
+  const [followData, setfollowData] = useState<FollowData>({
+    followers: [],
+    following: [],
+  });
   //Estados para los post
   const [posts, setPosts] = useState<Post[]>([]);
   // Inicializa editedBio con el valor actual de user?.bio
@@ -31,6 +40,36 @@ const PageProfile = () => {
   useEffect(() => {
     setEditedBio({ bio: user?.bio || "" });
   }, [user?.bio]); // Dependencia en user?.bio
+
+  //useEffect para obtener los datos del usuario logueado
+  useEffect(() => {
+    const getUserData = async () => {
+      if (!user || !user.id || typeof user.id !== "string") {
+        toast.error("Error: Datos del usurios no disponibles.", {
+          theme: "colored",
+          autoClose: 4000,
+        });
+        return; // Detenemos la función si no hay un token válido.
+      }
+      try {
+        const response = await getUserDataById(user.id);
+        if (response.status === "success") {
+          setfollowData({
+            followers: response.userData.followers || [],
+            following: response.userData.following || [],
+          });
+        } else {
+          console.error("Error al obtener los datos de usuario:", response.msg);
+        }
+      } catch (error) {
+        console.error(
+          "Error inesperado al obtener los datos de usuario:",
+          error
+        );
+      }
+    };
+    getUserData();
+  }, []);
 
   //useEffect para obtener los post de la base de datos
   useEffect(() => {
@@ -184,13 +223,19 @@ const PageProfile = () => {
         </div>
 
         {/* Sección para crear un nuevo Post */}
-        <CreatePost posts={posts} setPosts={setPosts}  />
+        <CreatePost posts={posts} setPosts={setPosts} />
 
         {/* Feed de Posts del Usuario */}
         <div className="space-y-6">
           {/* Ejemplo de un Post */}
           {posts.length > 0 ? (
-            posts.map((post) => <UserProfilePost key={post._id} post={post} userName={user?.username!} />)
+            posts.map((post) => (
+              <UserProfilePost
+                key={post._id}
+                post={post}
+                userName={user?.username!}
+              />
+            ))
           ) : (
             <p className="text-center text-gray-500">
               Aún no hay posts para mostrar.
