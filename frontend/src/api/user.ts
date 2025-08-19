@@ -2,6 +2,7 @@ import axios from "axios";
 import type {
   ApiCreatePostResponse,
   ApiGetPostsResponse,
+  ApiGetUserDataResponse,
   ApiResponse,
   BioFormData,
   LoginApiPostResponse,
@@ -111,6 +112,21 @@ export const getUserPosts = async (token: string): Promise<ApiGetPostsResponse> 
             return error.response?.data;
         } else {
             throw new Error('Ocurrió un error inesperado al obtener los posts.');
+        }
+    }
+};
+
+//Funcion para obtener los datos de username,bio,followings , followergs
+export const getUserDataById = async (userId: string): Promise<ApiGetUserDataResponse> => {
+    try {
+      
+        const res = await axios.get<ApiGetUserDataResponse>(`${API_URL}/user/userdata/${userId}`);
+        return res.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return error.response?.data;
+        } else {
+            throw new Error('Ocurrió un error inesperado al obtener los datos de usuario.');
         }
     }
 };
