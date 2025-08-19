@@ -34,6 +34,7 @@ export type RegisterFormData = UserFormDataBase & PasswordConfirmation;
 export type LoginFormData = Pick<User, "username" | "password">;
 
 export interface UserLoginData {
+  id:string;
   username: string;
   bio?: string;
   token: string;
