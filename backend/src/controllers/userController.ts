@@ -283,3 +283,21 @@ export const changeBio = async (req:Request, res:Response):Promise<Response> =>{
         return res.status(500).json({ status: 'error', msg: 'Error del servidor' });
     }
 }
+
+//Función para obtener seguidores y seguidos del usuario
+export const userDataById = async (req:Request, res:Response):Promise<Response> =>{
+        
+    const {userId} = req.params;
+        
+    try {
+        const userExist = await User.findById(userId).select('username bio followers following');
+        if(!userExist){
+            return res.status(404).json({ status: 'error', msg: 'Usuario no encontrado' });
+        }
+        
+        return res.status(200).json({ status: 'success', msg: 'User found', user:userExist });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ status: 'error', msg: 'Error del servidor' });
+    }
+}
