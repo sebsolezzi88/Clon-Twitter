@@ -211,12 +211,12 @@ const PageProfile = () => {
             </div>
             <div className="flex flex-col items-center">
               <UsersIcon className="h-6 w-6 text-gray-500 mb-1" />
-              <p className="font-bold text-gray-800">5.2K</p>
+              <p className="font-bold text-gray-800">{followData.followers.length}</p>
               <p className="text-sm text-gray-500">Seguidores</p>
             </div>
             <div className="flex flex-col items-center">
               <UserPlusIcon className="h-6 w-6 text-gray-500 mb-1" />
-              <p className="font-bold text-gray-800">800</p>
+              <p className="font-bold text-gray-800">{followData.following.length}</p>
               <p className="text-sm text-gray-500">Siguiendo</p>
             </div>
           </div>
