@@ -7,7 +7,7 @@ const router = Router();
 
 router.post('/create',validateUserRegister,createAccount); //Ruta para crear cuenta
 router.get('/activate',activateAccount); //Ruta para activar cuenta
-router.get('/userdata',userDataById); //Ruta para obtener username, bio, seguidores y seguidos
+router.get('/userdata/:userId',userDataById); //Ruta para obtener username, bio, seguidores y seguidos
 router.post('/login',loginUser); //Ruta para login y obtener token
 
 //Ruta editar perfil
