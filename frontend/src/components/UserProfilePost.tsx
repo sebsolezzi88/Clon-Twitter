@@ -5,14 +5,17 @@ import {
 } from "@heroicons/react/24/outline";
 import Swal from "sweetalert2";
 import type { Post } from "../types/types";
+import { toast } from "react-toastify";
+import { deletePost } from "../api/user";
 
 interface UserProfilePostProps {
   userName: string;
+  token: string;
   post: Post;
 }
 
 //Confirm Delete
-const handleConfirmDelete = () => {
+const handleConfirmDelete = async () => {
   Swal.fire({
     title: "¿Deseas eliminar el post?",
     text: "Esta acción no puede revertirse",
@@ -25,11 +28,16 @@ const handleConfirmDelete = () => {
     confirmButtonText: "Borrar ahora",
   }).then((result) => {
     if (result.isConfirmed) {
-      Swal.fire({
-        title: "Deleted!",
-        text: "Your file has been deleted.",
-        icon: "success",
-      });
+      //Si la respuesta es afirmativas borramos el post
+      try {
+        const response = await deletePost();
+      } catch (error) {
+            console.log(error);
+            toast.error("Error al borrar.Pruebe más tarde", {
+              theme: "colored",
+              autoClose: 2000,
+            });
+      } 
     }
   });
 };
