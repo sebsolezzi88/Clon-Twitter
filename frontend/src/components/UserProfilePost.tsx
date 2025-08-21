@@ -7,42 +7,71 @@ import Swal from "sweetalert2";
 import type { Post } from "../types/types";
 import { toast } from "react-toastify";
 import { deletePost } from "../api/user";
+import { useAuthStore } from "../storage/authStorage";
 
 interface UserProfilePostProps {
   userName: string;
-  token: string;
   post: Post;
+  posts:Post[];
+  setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
 }
 
-//Confirm Delete
-const handleConfirmDelete = async () => {
-  Swal.fire({
-    title: "¿Deseas eliminar el post?",
-    text: "Esta acción no puede revertirse",
-    icon: "warning",
-    iconColor: "#d08700",
-    showCancelButton: true,
-    cancelButtonText:"Cancelar",
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Borrar ahora",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      //Si la respuesta es afirmativas borramos el post
-      try {
-        const response = await deletePost();
-      } catch (error) {
-            console.log(error);
-            toast.error("Error al borrar.Pruebe más tarde", {
-              theme: "colored",
-              autoClose: 2000,
-            });
-      } 
-    }
-  });
-};
+const UserProfilePost = ({
+  post,
+  posts,
+  userName,
+  setPosts,
+}: UserProfilePostProps) => {
+  //Obtener los datos del usuario
+  const { user } = useAuthStore();
 
-const UserProfilePost = ({ post, userName }: UserProfilePostProps) => {
+  //Confirm Delete
+  const handleConfirmDelete = async (postId: string) => {
+    Swal.fire({
+      title: "¿Deseas eliminar el post?",
+      text: "Esta acción no puede revertirse",
+      icon: "warning",
+      iconColor: "#d08700",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Borrar ahora",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        //Si la respuesta es afirmativas borramos el post
+        try {
+          //Verificar user y token
+          if (!user || !user.token || typeof user.token !== "string") {
+            toast.error(
+              "Error: Token de usuario no disponible. Inténtalo de nuevo.",
+              {
+                theme: "colored",
+                autoClose: 4000,
+              }
+            );
+          }
+          const response = await deletePost(user?.token!, postId);
+          if (response.status === "success") {
+            //Filtramos el post borrado del los post
+            setPosts(posts.filter(post=> post._id !== postId))
+            Swal.fire({
+              title: "Post borrado",
+              text: "El post ha sido borrado",
+              icon: "success",
+            });
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error("Error al borrar.Pruebe más tarde", {
+            theme: "colored",
+            autoClose: 2000,
+          });
+        }
+      }
+    });
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="flex items-start justify-between mb-4">
@@ -54,7 +83,7 @@ const UserProfilePost = ({ post, userName }: UserProfilePostProps) => {
         </div>
         {/* Aquí está el icono de la papelera */}
         <button
-          onClick={handleConfirmDelete}
+          onClick={() => handleConfirmDelete(post._id)}
           className="p-2 text-gray-400 hover:text-red-500 rounded-full transition-colors"
         >
           <TrashIcon className="h-5 w-5" />

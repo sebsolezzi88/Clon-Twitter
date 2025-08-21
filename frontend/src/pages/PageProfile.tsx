@@ -233,6 +233,8 @@ const PageProfile = () => {
               <UserProfilePost
                 key={post._id}
                 post={post}
+                posts={posts}
+                setPosts={setPosts}
                 userName={user?.username!}
               />
             ))
