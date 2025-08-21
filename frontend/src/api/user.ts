@@ -130,3 +130,27 @@ export const getUserDataById = async (userId: string): Promise<ApiGetUserDataRes
         }
     }
 };
+
+//Funcion para borrar post
+export const deletePost = async (token:string, postId:string): Promise<ApiResponse> => {
+    try {
+        const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, 
+        };
+
+        const res = await axios.delete<ApiResponse>(
+            `${API_URL}/post/${postId}`,
+            { headers }
+        );
+        return res.data;
+    } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // Devuelve el objeto de error completo para que sea manejado por quien llama a la función
+      return error.response?.data;
+    } else {
+      // Lanza un error genérico para errores inesperados
+      throw new Error("Ocurrió un error inesperado.");
+    }
+  }
+};
