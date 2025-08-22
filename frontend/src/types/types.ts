@@ -49,6 +49,7 @@ export type BioFormData = Pick<User, "bio">;
 
 //Interfaces para los post
 export interface Comment {
+  _id?:string,
   user: User;
   text: string;
   createdAt: Date;
