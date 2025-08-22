@@ -8,6 +8,7 @@ export interface ApiResponse {
 
 //Interface para usuario
 export interface User {
+  _id?:string,
   username: string;
   bio?: string;
   email: string;
@@ -75,4 +76,24 @@ export interface ApiGetPostsResponse extends ApiResponse{
 type UserData = Pick<User, 'followers' | 'following' | 'username' | 'bio'>
 export interface ApiGetUserDataResponse extends ApiResponse{
   userData: UserData
+}
+
+//Interfaces para obtener post y mostrarlos en el main
+export interface ApiGetPostsMainResponse {
+    status: string;
+    msg:    string;
+    posts:  MainPost[];
+}
+export interface MainPost {
+    _id:       string;
+    author:    Author;
+    text:      string;
+    image?:    string;
+    likes:     string[];
+    comments:  Comment[];
+    createdAt: Date;
+}
+export interface Author {
+    _id:      string;
+    username: string;
 }
