@@ -8,6 +8,7 @@ import type { Post } from "../types/types";
 import { toast } from "react-toastify";
 import { deletePost } from "../api/user";
 import { useAuthStore } from "../storage/authStorage";
+import { formatTimeAgo } from "../utils/formatDate";
 
 interface UserProfilePostProps {
   userName: string;
@@ -78,7 +79,7 @@ const UserProfilePost = ({
         <div className="flex items-center space-x-4">
           <div>
             <span className="font-bold text-gray-800">{userName}</span>
-            <span className="text-sm text-gray-500 ml-2">hace 5 minutos</span>
+            <span className="text-sm text-gray-500 ml-2">{formatTimeAgo(post.createdAt.toString())}</span>
           </div>
         </div>
         {/* Aquí está el icono de la papelera */}
