@@ -227,7 +227,7 @@ export const likePost = async (req: Request, res: Response): Promise<Response> =
 //Funcion para obtner los ultimo 10 post
 export const getLastTenPost = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const posts  = await Post.find().sort({ createdAt: -1 }).limit(10);
+        const posts  = await Post.find().populate('author', 'username').sort({ createdAt: -1 }).limit(10);
 
          return res.status(200).json({ status: 'error', msg: 'Post found', posts });
     } catch (error) {
