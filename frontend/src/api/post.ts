@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 //Funcion para obtener los ultimos 10 posts
 export const getLast10Post = async (): Promise<ApiGetPostsMainResponse> => {
   try {
-    const res = await axios.post<ApiGetPostsMainResponse>(`${API_URL}/post/last10`);
+    const res = await axios.get<ApiGetPostsMainResponse>(`${API_URL}/post/last10`);
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
